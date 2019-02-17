@@ -9,8 +9,8 @@
  *
  * Binteger<std::uint16_t> b;
  * b[{15, 11}] = 5;
- * std::cout << "Binary: " << b << std::endl;
- * std::cout << "Decimal: " << b.to_trivial<unsigned int>() << std::endl;
+ * std::cout << "Binary: " << b[{15, 0}] << std::endl;
+ * std::cout << "Decimal: " << b[{15, 0}].to_trivial<unsigned int>() << std::endl;
  */
 #ifndef BINTEGER_H
 #define BINTEGER_H
@@ -19,6 +19,30 @@
 #include <type_traits>
 #include <cstdint>
 #include <cstring>
+
+/*
+ * Copies bits from the object representation of FromType from to a value 
+ * initialized object of type ToType. If the size of FromType is larger 
+ * than the size of ToType, only the first N bits equal to the size of 
+ * ToType are copied.
+ */
+template <typename ToType, typename FromType>
+typename std::enable_if<
+	std::is_trivially_copyable<FromType>::value &&
+	std::is_trivial<ToType>::value,
+	ToType
+>::type truncate_and_bit_cast(const FromType& from)
+{
+	ToType to{};
+	std::memcpy(std::addressof(to),
+			std::addressof(from),
+			sizeof(typename std::conditional<
+				sizeof(to) < sizeof(from),
+				ToType,
+				FromType
+			>::type));
+	return to;
+}
 
 template <
 	typename UnderlyingType,
@@ -112,14 +136,8 @@ private:
 		>
 		const const_unqualified_reference& operator=(const ValueType& value) const
 		{
-			underlying_type v{};
-			std::memcpy(std::addressof(v), std::addressof(value), 
-				sizeof(typename std::conditional<
-						sizeof(ValueType) <
-						sizeof(underlying_type),
-						ValueType,
-						underlying_type
-					>::type));
+			underlying_type v{truncate_and_bit_cast<
+					underlying_type>(value)};
 			*data_pointer = ((*data_pointer & ~data_bitmask) |
 						(v & value_bitmask) << position);
 			return *this;
@@ -141,16 +159,10 @@ private:
 			ToType
 		>::type to_trivial() const
 		{
-			ToType result{};
+			ToType result;
 			underlying_type v{};
 			v = ((*data_pointer & data_bitmask) >> position);
-			std::memcpy(std::addressof(result), std::addressof(v),
-					sizeof(typename std::conditional<
-							sizeof(ToType) <
-							sizeof(underlying_type),
-							ToType,
-							underlying_type
-						>::type));
+			result = truncate_and_bit_cast<ToType>(v);
 			return result;
 		}
 	
@@ -179,7 +191,7 @@ private:
 			std::basic_ostream<CharT, Traits>& os,
 			const const_unqualified_reference& r)
 		{
-			return (os << r.to_string());
+			return (os << r.to_string<CharT, Traits>());
 		}
 
 	};
@@ -213,6 +225,8 @@ public:
 		return { std::addressof(data()), r };
 	}
 
+	template <typename ValueType>
+	
 	void swap(Binteger& other)
 	{
 		BintegerBase<UnderlyingType>::swap();
