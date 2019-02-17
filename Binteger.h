@@ -37,7 +37,7 @@ typename std::enable_if<
 	std::memcpy(std::addressof(to),
 			std::addressof(from),
 			sizeof(typename std::conditional<
-				sizeof(to) < sizeof(from),
+				sizeof(to) <= sizeof(from),
 				ToType,
 				FromType
 			>::type));
@@ -117,16 +117,12 @@ private:
 			}
 		}
 
+	public:
 		const_unqualified_reference(
 			const const_unqualified_reference&) = default;
 		const_unqualified_reference(
-			const_unqualified_reference&&) = default;
-		const_unqualified_reference& operator=(
-			const const_unqualified_reference&) = default;
-		const_unqualified_reference& operator=(
 			const_unqualified_reference&&) = default;
 	public:
-
 		template <
 			typename ValueType,
 			typename = typename std::enable_if<
@@ -139,8 +135,20 @@ private:
 			underlying_type v{truncate_and_bit_cast<
 					underlying_type>(value)};
 			*data_pointer = ((*data_pointer & ~data_bitmask) |
-						(v & value_bitmask) << position);
+						((v & value_bitmask) << position));
 			return *this;
+		}
+
+		const const_unqualified_reference& operator=(
+				const const_unqualified_reference& other) const
+		{
+			return operator=(other.to<underlying_type>());
+		}
+
+		const const_unqualified_reference& operator=(
+				const_unqualified_reference&& other) const
+		{
+			return operator=(other.to<underlying_type>());
 		}
 
 		const const_unqualified_reference operator[](size_type i) const
@@ -157,15 +165,13 @@ private:
 		typename std::enable_if<
 			std::is_trivial<ToType>::value,
 			ToType
-		>::type to_trivial() const
+		>::type to() const
 		{
-			ToType result;
 			underlying_type v{};
 			v = ((*data_pointer & data_bitmask) >> position);
-			result = truncate_and_bit_cast<ToType>(v);
-			return result;
+			return truncate_and_bit_cast<ToType>(v);
 		}
-	
+
 		template <
 			typename CharT = char,
 			typename Traits = std::char_traits<CharT>,
@@ -184,7 +190,7 @@ private:
 			}
 			return result;
 		}
-	
+
 		/* TODO: Optimize to not make a temporary string */
 		template <typename CharT, typename Traits>
 		friend std::basic_ostream<CharT, Traits>& operator<<(
@@ -225,8 +231,6 @@ public:
 		return { std::addressof(data()), r };
 	}
 
-	template <typename ValueType>
-	
 	void swap(Binteger& other)
 	{
 		BintegerBase<UnderlyingType>::swap();
@@ -249,6 +253,5 @@ void swap(Binteger<T>& a, Binteger<T>& b)
 {
 	a.swap(b);
 }
-
 
 #endif
