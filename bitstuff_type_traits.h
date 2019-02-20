@@ -11,12 +11,12 @@
 #include <cstring>
 namespace bitstuff {
 	/*
-	 *	template <class From, class To>
-	 *	struct is_reinterpret_cast_convertible<From, To>
+	 * template <class From, class To>
+	 * struct is_reinterpret_cast_convertible<From, To>
 	 *
-	 *	Checks if a type can be converted to the other type using
-	 *	reinterpret_cast without getting a compiler error, static 
-	 *	const data member value will be true if this is the case.
+	 * Checks if a type can be converted to the other type using
+	 * reinterpret_cast without getting a compiler error, static 
+	 * const data member value will be true if this is the case.
 	 */
 	template <class From, class To>
 	struct is_reinterpret_cast_convertible : 
@@ -57,23 +57,15 @@ namespace bitstuff {
 			std::false_type
 		>::type {};
 
-	/* Recursively removes all const, volatile, reference from a type */
-	template <class T> struct remove_cvr { typedef T type; };
-	template <class T> struct remove_cvr<T&> : remove_cvr<T> {};
-	template <class T> struct remove_cvr<T&&> : remove_cvr<T> {};
-	template <class T> struct remove_cvr<T const> : remove_cvr<T> {};
-	template <class T> struct remove_cvr<T volatile> : remove_cvr<T> {};
-	template <class T> struct remove_cvr<T const volatile> : remove_cvr<T> {};
-
 	/*
 	 * template <class To, class From>
-	 * To byte_cast(From from);
+	 * To byte_cast(const From& from);
 	 * template <class To, class From>
-	 * To extended_byte_cast(From from);
+	 * To extended_byte_cast(const From& from);
 	 * template <class To, class From>
-	 * To truncated_byte_cast(From from);
+	 * To truncated_byte_cast(const From& from);
 	 * template <class To, class From>
-	 * To resized_byte_cast(From from);
+	 * To resized_byte_cast(const From& from);
 	 *
 	 * byte_cast: Returns a new object of type To whose object representation 
 	 * contains the same bytes as that from the object representation of from.
@@ -96,6 +88,7 @@ namespace bitstuff {
 	 * All four functions return a copy of reinterpret_cast<To>(from) if such 
 	 * an expression is not ill-formed, otherwise std::memcpy is used.
 	 */
+
 	template <class To, class From>
 	typename std::enable_if<
 		is_reinterpret_cast_convertible<From, To>::value, To
