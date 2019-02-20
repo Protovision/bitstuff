@@ -123,6 +123,7 @@ namespace bitstuff {
 	
 	template <class To, class From>
 	typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
 		sizeof(To) == sizeof(From) &&
 		std::is_trivial<To>::value &&
 		std::is_trivially_copyable<From>::value,
@@ -139,6 +140,7 @@ namespace bitstuff {
 
 	template <class To, class From>
 	typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
 		sizeof(To) >= sizeof(From) &&
 		std::is_trivial<To>::value &&
 		std::is_trivially_copyable<From>::value,
@@ -155,6 +157,7 @@ namespace bitstuff {
 
 	template <class To, class From>
 	typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
 		sizeof(To) <= sizeof(From) &&
 		std::is_trivial<To>::value &&
 		std::is_trivially_copyable<From>::value,
@@ -171,6 +174,7 @@ namespace bitstuff {
 
 	template <class To, class From>
 	typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
 		std::is_trivial<To>::value &&
 		std::is_trivially_copyable<From>::value,
 		To
