@@ -86,7 +86,9 @@ namespace bitstuff {
 	 * sizeof(From) > sizeof(To) respectively.
 	 *
 	 * All four functions return a copy of reinterpret_cast<To>(from) if such 
-	 * an expression is not ill-formed, otherwise std::memcpy is used.
+	 * an expression is not ill-formed, making these functions really fast for 
+	 * converting back and forth between integers and pointers; if 
+	 * reinterpret_cast cannot be used, these functions use std::memcpy.
 	 */
 
 	template <class To, class From>
