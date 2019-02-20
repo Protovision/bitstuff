@@ -43,16 +43,16 @@ namespace bitstuff {
 				std::is_reference<To>::value) ||
 			(std::is_member_function_pointer<
 				typename std::remove_reference<From>::type
-			>::value &&
-			std::is_member_function_pointer<
-				typename std::remove_reference<To>::type
-			>::value) ||
+				>::value &&
+				std::is_member_function_pointer<
+					typename std::remove_reference<To>::type
+				>::value) ||
 			(std::is_member_object_pointer<
 				typename std::remove_reference<From>::type
-			>::value &&
-			std::is_member_object_pointer<
-				typename std::remove_reference<To>::type
-			>::value)),
+				>::value &&
+				std::is_member_object_pointer<
+					typename std::remove_reference<To>::type
+				>::value)),
 			std::true_type,
 			std::false_type
 		>::type {};
