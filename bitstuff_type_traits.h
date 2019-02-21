@@ -9,6 +9,7 @@
 #include <utility>
 #include <type_traits>
 #include <cstring>
+#include <cstdint>
 namespace bitstuff {
 	/*
 	 * template <class From, class To>
@@ -91,8 +92,15 @@ namespace bitstuff {
 	 * reinterpret_cast cannot be used, these functions use std::memcpy.
 	 */
 
+	/*
+	 * The fastest byte_cast conversions are for converting from pointer to 
+	 * integral or integral to pointer, reinterpret_cast can be used for this
+	 * which does not compile to a CPU instruction. The only overhead is the 
+	 * cost of entering and leaving the function.
+	 */
+
 	template <class To, class From>
-	typename std::enable_if<
+	inline typename std::enable_if<
 		is_reinterpret_cast_convertible<From, To>::value, To
 	>::type extended_byte_cast(From from)
 	{
@@ -100,7 +108,7 @@ namespace bitstuff {
 	}
 
 	template <class To, class From>
-	typename std::enable_if<
+	inline typename std::enable_if<
 		is_reinterpret_cast_convertible<From, To>::value, To
 	>::type truncated_byte_cast(From from)
 	{
@@ -108,7 +116,7 @@ namespace bitstuff {
 	}
 
 	template <class To, class From>
-	typename std::enable_if<
+	inline typename std::enable_if<
 		is_reinterpret_cast_convertible<From, To>::value, To
 	>::type resized_byte_cast(From from)
 	{
@@ -116,17 +124,19 @@ namespace bitstuff {
 	}
 
 	template <class To, class From>
-	typename std::enable_if<
+	inline typename std::enable_if<
 		is_reinterpret_cast_convertible<From, To>::value, To
-	>::type byte_cast(const From& from)
+	>::type byte_cast(From from)
 	{
 		return reinterpret_cast<To>(from);
 	}
 
 	/*
-	 * Should probably use std::addressof but it's slower because it 
-	 * generates a function call and wastes CPU instructions for 
-	 * types that don't overload operator&
+	 * Should probably use std::addressof for std::memcpy in case operator&() 
+	 * is overloaded, but std::addressof generates a function call (inline 
+	 * specifiers are often ignored) and wastes CPU instructions for 99% of 
+	 * the types whose addresses can be obtained with just a single CPU 
+	 * instruction.
 	 */
 
 	template <class To, class From>
@@ -134,9 +144,56 @@ namespace bitstuff {
 		!is_reinterpret_cast_convertible<From, To>::value &&
 		sizeof(To) == sizeof(From) &&
 		std::is_trivial<To>::value &&
-		std::is_trivially_copyable<From>::value,
+		std::is_trivially_copyable<From>::value &&
+		sizeof(From) <= sizeof(std::uintptr_t),
+		To
+	>::type byte_cast(From from)
+	{
+		To result{};
+		std::memcpy(
+			&result,
+			&from,
+			sizeof(From));
+		return result;
+	}
+
+	template <class To, class From>
+	typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
+		sizeof(To) == sizeof(From) &&
+		std::is_trivial<To>::value &&
+		std::is_trivially_copyable<From>::value &&
+		(sizeof(From) > sizeof(std::uintptr_t)),
 		To
 	>::type byte_cast(const From& from)
+	{
+		To result{};
+		std::memcpy(
+			&result,
+			&from,
+			sizeof(From));
+		return result;
+	}
+
+	/*
+	 * For each byte_cast variation that uses std::memcpy, there are two 
+	 * overloads with the same body but different signatures. For converting 
+	 * from types that can fit in std::uintptr_t, the argument is accepted by 
+	 * copy; otherwise, the argument is accepted by lvalue reference. This is 
+	 * so that we don't have to pass and dereference pointers to objects which
+	 * are already small enough that they can be passed directly through 
+	 * registers.
+	 */
+
+	template <class To, class From>
+	typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
+		sizeof(To) >= sizeof(From) &&
+		std::is_trivial<To>::value &&
+		std::is_trivially_copyable<From>::value &&
+		sizeof(From) <= sizeof(std::uintptr_t),
+		To
+	>::type extended_byte_cast(From from)
 	{
 		To result{};
 		std::memcpy(
@@ -151,7 +208,8 @@ namespace bitstuff {
 		!is_reinterpret_cast_convertible<From, To>::value &&
 		sizeof(To) >= sizeof(From) &&
 		std::is_trivial<To>::value &&
-		std::is_trivially_copyable<From>::value,
+		std::is_trivially_copyable<From>::value &&
+		(sizeof(From) > sizeof(std::uintptr_t)),
 		To
 	>::type extended_byte_cast(const From& from)
 	{
@@ -168,9 +226,10 @@ namespace bitstuff {
 		!is_reinterpret_cast_convertible<From, To>::value &&
 		sizeof(To) <= sizeof(From) &&
 		std::is_trivial<To>::value &&
-		std::is_trivially_copyable<From>::value,
+		std::is_trivially_copyable<From>::value &&
+		sizeof(From) <= sizeof(std::uintptr_t),
 		To
-	>::type truncated_byte_cast(const From& from)
+	>::type truncated_byte_cast(From from)
 	{
 		To result{};
 		std::memcpy(
@@ -183,8 +242,48 @@ namespace bitstuff {
 	template <class To, class From>
 	typename std::enable_if<
 		!is_reinterpret_cast_convertible<From, To>::value &&
+		sizeof(To) <= sizeof(From) &&
 		std::is_trivial<To>::value &&
-		std::is_trivially_copyable<From>::value,
+		std::is_trivially_copyable<From>::value &&
+		(sizeof(From) > sizeof(std::uintptr_t)),
+		To
+	>::type truncated_byte_cast(const From& from)
+	{
+		To result{};
+		std::memcpy(
+			&result,
+			&from,
+			sizeof(To));
+		return result;
+	}
+	
+	template <class To, class From>
+	typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
+		std::is_trivial<To>::value &&
+		std::is_trivially_copyable<From>::value &&
+		sizeof(From) <= sizeof(std::uintptr_t),
+		To
+	>::type resized_byte_cast(From from)
+	{
+		To result{};
+		std::memcpy(
+			&result,
+			&from,
+			sizeof(typename std::conditional<
+				sizeof(To) >= sizeof(From),
+				From,
+				To
+			>::type));
+		return result;
+	}
+
+	template <class To, class From>
+	typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
+		std::is_trivial<To>::value &&
+		std::is_trivially_copyable<From>::value &&
+		(sizeof(From) > sizeof(std::uintptr_t)),
 		To
 	>::type resized_byte_cast(const From& from)
 	{
