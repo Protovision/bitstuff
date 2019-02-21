@@ -151,6 +151,16 @@ namespace bitstuff {
 	 * the conversion generates a function call.
 	 */
 
+	/*
+	 * For each pair of byte_cast variation overloads, there are additional 
+	 * overloads that choose whether or not to default initialize or value 
+	 * initialize the object for the return value first before performing the
+	 * memory copy. If the From object is large enough to fill the entire 
+	 * To object, then the To object need not be initialized since 
+	 * std::memcpy will overwrite it. There's lots of repeated code because 
+	 * of these checks and `if constexpr` is still too new to be used.
+	 */
+
 	template <class To, class From>
 	[[gnu::always_inline]]
 	inline typename std::enable_if<
@@ -162,7 +172,7 @@ namespace bitstuff {
 		To
 	>::type byte_cast(From from)
 	{
-		To result{};
+		To result;
 		std::memcpy(
 			&result,
 			&from,
@@ -180,7 +190,7 @@ namespace bitstuff {
 		To
 	>::type byte_cast(const From& from)
 	{
-		To result{};
+		To result;
 		std::memcpy(
 			&result,
 			&from,
@@ -192,36 +202,62 @@ namespace bitstuff {
 	[[gnu::always_inline]]
 	inline typename std::enable_if<
 		!is_reinterpret_cast_convertible<From, To>::value &&
+		std::is_trivial<To>::value &&
+		std::is_trivially_copyable<From>::value &&
+		sizeof(From) <= sizeof(std::uintptr_t) &&
+		sizeof(From) == sizeof(To),
+		To
+	>::type extended_byte_cast(From from)
+	{
+		To result;
+		std::memcpy(&result, &from, sizeof(From));
+		return result;
+	}
+
+	template <class To, class From>
+	[[gnu::always_inline]]
+	inline typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
 		sizeof(To) >= sizeof(From) &&
 		std::is_trivial<To>::value &&
 		std::is_trivially_copyable<From>::value &&
-		sizeof(From) <= sizeof(std::uintptr_t),
+		sizeof(From) <= sizeof(std::uintptr_t) &&
+		sizeof(From) < sizeof(To),
 		To
 	>::type extended_byte_cast(From from)
 	{
 		To result{};
-		std::memcpy(
-			&result,
-			&from,
-			sizeof(From));
+		std::memcpy(&result, &from, sizeof(From));
 		return result;
 	}
 
 	template <class To, class From>
 	typename std::enable_if<
 		!is_reinterpret_cast_convertible<From, To>::value &&
-		sizeof(To) >= sizeof(From) &&
 		std::is_trivial<To>::value &&
 		std::is_trivially_copyable<From>::value &&
-		(sizeof(From) > sizeof(std::uintptr_t)),
+		(sizeof(From) > sizeof(std::uintptr_t)) &&
+		sizeof(From) == sizeof(To),
+		To
+	>::type extended_byte_cast(const From& from)
+	{
+		To result;
+		std::memcpy(&result, &from, sizeof(From));
+		return result;
+	}
+
+	template <class To, class From>
+	typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
+		std::is_trivial<To>::value &&
+		std::is_trivially_copyable<From>::value &&
+		(sizeof(From) > sizeof(std::uintptr_t)) &&
+		sizeof(From) < sizeof(To),
 		To
 	>::type extended_byte_cast(const From& from)
 	{
 		To result{};
-		std::memcpy(
-			&result,
-			&from,
-			sizeof(From));
+		std::memcpy(&result, &from, sizeof(From));
 		return result;
 	}
 
@@ -236,11 +272,8 @@ namespace bitstuff {
 		To
 	>::type truncated_byte_cast(From from)
 	{
-		To result{};
-		std::memcpy(
-			&result,
-			&from,
-			sizeof(To));
+		To result;
+		std::memcpy(&result, &from, sizeof(To));
 		return result;
 	}
 
@@ -254,7 +287,7 @@ namespace bitstuff {
 		To
 	>::type truncated_byte_cast(const From& from)
 	{
-		To result{};
+		To result;
 		std::memcpy(
 			&result,
 			&from,
@@ -268,19 +301,29 @@ namespace bitstuff {
 		!is_reinterpret_cast_convertible<From, To>::value &&
 		std::is_trivial<To>::value &&
 		std::is_trivially_copyable<From>::value &&
-		sizeof(From) <= sizeof(std::uintptr_t),
+		sizeof(From) <= sizeof(std::uintptr_t) &&
+		sizeof(From) >= sizeof(To),
+		To
+	>::type resized_byte_cast(From from)
+	{
+		To result;
+		std::memcpy(&result, &from, sizeof(To));
+		return result;
+	}
+
+	template <class To, class From>
+	[[gnu::always_inline]]
+	inline typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
+		std::is_trivial<To>::value &&
+		std::is_trivially_copyable<From>::value &&
+		sizeof(From) <= sizeof(std::uintptr_t) &&
+		sizeof(From) < sizeof(To),
 		To
 	>::type resized_byte_cast(From from)
 	{
 		To result{};
-		std::memcpy(
-			&result,
-			&from,
-			sizeof(typename std::conditional<
-				sizeof(To) >= sizeof(From),
-				From,
-				To
-			>::type));
+		std::memcpy(&result, &from, sizeof(From));
 		return result;
 	}
 
@@ -289,19 +332,28 @@ namespace bitstuff {
 		!is_reinterpret_cast_convertible<From, To>::value &&
 		std::is_trivial<To>::value &&
 		std::is_trivially_copyable<From>::value &&
-		(sizeof(From) > sizeof(std::uintptr_t)),
+		(sizeof(From) > sizeof(std::uintptr_t)) &&
+		sizeof(From) >= sizeof(To),
+		To
+	>::type resized_byte_cast(const From& from)
+	{
+		To result;
+		std::memcpy(&result, &from, sizeof(To));
+		return result;
+	}
+
+	template <class To, class From>
+	typename std::enable_if<
+		!is_reinterpret_cast_convertible<From, To>::value &&
+		std::is_trivial<To>::value &&
+		std::is_trivially_copyable<From>::value &&
+		(sizeof(From) > sizeof(std::uintptr_t)) &&
+		sizeof(From) < sizeof(To),
 		To
 	>::type resized_byte_cast(const From& from)
 	{
 		To result{};
-		std::memcpy(
-			&result,
-			&from,
-			sizeof(typename std::conditional<
-				sizeof(To) >= sizeof(From),
-				From,
-				To
-			>::type));
+		std::memcpy(&result, &from, sizeof(From));
 		return result;
 	}
 

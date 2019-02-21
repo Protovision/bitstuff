@@ -13,7 +13,7 @@ large_object:
 	.def	_Z20do_fastest_byte_castv;	.scl	2;	.type	32;	.endef
 	.seh_proc	_Z20do_fastest_byte_castv
 _Z20do_fastest_byte_castv:
-.LFB1501:
+.LFB1505:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -42,7 +42,7 @@ _Z20do_fastest_byte_castv:
 	.def	_Z24do_pretty_fast_byte_castv;	.scl	2;	.type	32;	.endef
 	.seh_proc	_Z24do_pretty_fast_byte_castv
 _Z24do_pretty_fast_byte_castv:
-.LFB1502:
+.LFB1506:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -57,7 +57,6 @@ _Z24do_pretty_fast_byte_castv:
 /NO_APP
 	movss	.LC0(%rip), %xmm0
 	movss	%xmm0, -4(%rbp)
-	movl	$0, -8(%rbp)
 	movl	-4(%rbp), %eax
 	movl	%eax, -8(%rbp)
 /APP
@@ -74,7 +73,7 @@ _Z24do_pretty_fast_byte_castv:
 	.def	_Z24do_not_as_fast_byte_castv;	.scl	2;	.type	32;	.endef
 	.seh_proc	_Z24do_not_as_fast_byte_castv
 _Z24do_not_as_fast_byte_castv:
-.LFB1503:
+.LFB1507:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	subq	$1056, %rsp
@@ -106,7 +105,7 @@ _Z24do_not_as_fast_byte_castv:
 	.def	main;	.scl	2;	.type	32;	.endef
 	.seh_proc	main
 main:
-.LFB1504:
+.LFB1508:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -129,7 +128,7 @@ main:
 	.def	_ZN8bitstuff9byte_castI1U1TEENSt9enable_ifIXaaaaaaaantsrNS_31is_reinterpret_cast_convertibleIT0_T_EE5valueeqstS6_stS5_srSt10is_trivialIS6_E5valuesrSt21is_trivially_copyableIS5_E5valuegtstS5_stmES6_E4typeERKS5_;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZN8bitstuff9byte_castI1U1TEENSt9enable_ifIXaaaaaaaantsrNS_31is_reinterpret_cast_convertibleIT0_T_EE5valueeqstS6_stS5_srSt10is_trivialIS6_E5valuesrSt21is_trivially_copyableIS5_E5valuegtstS5_stmES6_E4typeERKS5_
 _ZN8bitstuff9byte_castI1U1TEENSt9enable_ifIXaaaaaaaantsrNS_31is_reinterpret_cast_convertibleIT0_T_EE5valueeqstS6_stS5_srSt10is_trivialIS6_E5valuesrSt21is_trivially_copyableIS5_E5valuegtstS5_stmES6_E4typeERKS5_:
-.LFB1717:
+.LFB1721:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	pushq	%rdi
@@ -141,25 +140,6 @@ _ZN8bitstuff9byte_castI1U1TEENSt9enable_ifIXaaaaaaaantsrNS_31is_reinterpret_cast
 	.seh_endprologue
 	movq	%rcx, 32(%rbp)
 	movq	%rdx, 40(%rbp)
-	movq	32(%rbp), %rax
-	movl	$1024, %ecx
-	movl	$0, %r8d
-	movq	%r8, (%rax)
-	movl	%ecx, %edx
-	addq	%rax, %rdx
-	addq	$8, %rdx
-	movq	%r8, -16(%rdx)
-	leaq	8(%rax), %rdx
-	andq	$-8, %rdx
-	subq	%rdx, %rax
-	addl	%eax, %ecx
-	andl	$-8, %ecx
-	movl	%ecx, %eax
-	shrl	$3, %eax
-	movl	%eax, %ecx
-	movq	%rdx, %rdi
-	movq	%r8, %rax
-	rep stosq
 	movq	32(%rbp), %rax
 	movq	40(%rbp), %rdx
 	movl	$1024, %ecx
@@ -197,7 +177,7 @@ _ZN8bitstuff9byte_castI1U1TEENSt9enable_ifIXaaaaaaaantsrNS_31is_reinterpret_cast
 	.def	_Z41__static_initialization_and_destruction_0ii;	.scl	3;	.type	32;	.endef
 	.seh_proc	_Z41__static_initialization_and_destruction_0ii
 _Z41__static_initialization_and_destruction_0ii:
-.LFB1885:
+.LFB1889:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -226,7 +206,7 @@ _Z41__static_initialization_and_destruction_0ii:
 	.def	_GLOBAL__sub_I_large_object;	.scl	3;	.type	32;	.endef
 	.seh_proc	_GLOBAL__sub_I_large_object
 _GLOBAL__sub_I_large_object:
-.LFB1886:
+.LFB1890:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
