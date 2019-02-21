@@ -18,6 +18,8 @@ namespace bitstuff {
 	 * Checks if a type can be converted to the other type using
 	 * reinterpret_cast without getting a compiler error, static 
 	 * const data member value will be true if this is the case.
+	 *
+	 * I hope I got this conditional right.
 	 */
 	template <class From, class To>
 	struct is_reinterpret_cast_convertible : 
@@ -89,17 +91,21 @@ namespace bitstuff {
 	 * All four functions return a copy of reinterpret_cast<To>(from) if such 
 	 * an expression is not ill-formed, making these functions really fast for 
 	 * converting back and forth between integers and pointers; if 
-	 * reinterpret_cast cannot be used, these functions use std::memcpy.
+	 * reinterpret_cast cannot be used, these functions will use std::memcpy.
 	 */
 
 	/*
 	 * The fastest byte_cast conversions are for converting from pointer to 
-	 * integral or integral to pointer, reinterpret_cast can be used for this
-	 * which does not compile to a CPU instruction. The only overhead is the 
-	 * cost of entering and leaving the function.
+	 * integral or integral to pointer; reinterpret_cast, which generates zero 
+	 * CPU instructions, can be safely used for this. The only overhead is the
+	 * cost of entering and leaving the function with the same return value 
+	 * as was passed in: unless you are using a GCC compiler, in which case 
+	 * GCC only generates exactly one load and one store from these overloads 
+	 * thanks to [[gnu::always_inline]].
 	 */
 
 	template <class To, class From>
+	[[gnu::always_inline]]
 	inline typename std::enable_if<
 		is_reinterpret_cast_convertible<From, To>::value, To
 	>::type extended_byte_cast(From from)
@@ -108,6 +114,7 @@ namespace bitstuff {
 	}
 
 	template <class To, class From>
+	[[gnu::always_inline]]
 	inline typename std::enable_if<
 		is_reinterpret_cast_convertible<From, To>::value, To
 	>::type truncated_byte_cast(From from)
@@ -116,6 +123,7 @@ namespace bitstuff {
 	}
 
 	template <class To, class From>
+	[[gnu::always_inline]]
 	inline typename std::enable_if<
 		is_reinterpret_cast_convertible<From, To>::value, To
 	>::type resized_byte_cast(From from)
@@ -124,23 +132,28 @@ namespace bitstuff {
 	}
 
 	template <class To, class From>
+	[[gnu::always_inline]] 
 	inline typename std::enable_if<
 		is_reinterpret_cast_convertible<From, To>::value, To
 	>::type byte_cast(From from)
 	{
 		return reinterpret_cast<To>(from);
 	}
-
+	
 	/*
-	 * Should probably use std::addressof for std::memcpy in case operator&() 
-	 * is overloaded, but std::addressof generates a function call (inline 
-	 * specifiers are often ignored) and wastes CPU instructions for 99% of 
-	 * the types whose addresses can be obtained with just a single CPU 
-	 * instruction.
+	 * For each byte_cast variation that uses std::memcpy, there are two 
+	 * overloads with the same body but different signatures. For a conversion 
+	 * from an object that can be stored in a register, it is passed by copy 
+	 * and the function is executed inline; for this case it is assumed that 
+	 * std::memcpy is optimized to generate no more than 2 instructions for 
+	 * copying a register sized object. For a conversion from an object that 
+	 * cannot be stored in a register, it is passed by reference and 
+	 * the conversion generates a function call.
 	 */
 
 	template <class To, class From>
-	typename std::enable_if<
+	[[gnu::always_inline]]
+	inline typename std::enable_if<
 		!is_reinterpret_cast_convertible<From, To>::value &&
 		sizeof(To) == sizeof(From) &&
 		std::is_trivial<To>::value &&
@@ -175,18 +188,9 @@ namespace bitstuff {
 		return result;
 	}
 
-	/*
-	 * For each byte_cast variation that uses std::memcpy, there are two 
-	 * overloads with the same body but different signatures. For converting 
-	 * from types that can fit in std::uintptr_t, the argument is accepted by 
-	 * copy; otherwise, the argument is accepted by lvalue reference. This is 
-	 * so that we don't have to pass and dereference pointers to objects which
-	 * are already small enough that they can be passed directly through 
-	 * registers.
-	 */
-
 	template <class To, class From>
-	typename std::enable_if<
+	[[gnu::always_inline]]
+	inline typename std::enable_if<
 		!is_reinterpret_cast_convertible<From, To>::value &&
 		sizeof(To) >= sizeof(From) &&
 		std::is_trivial<To>::value &&
@@ -222,7 +226,8 @@ namespace bitstuff {
 	}
 
 	template <class To, class From>
-	typename std::enable_if<
+	[[gnu::always_inline]]
+	inline typename std::enable_if<
 		!is_reinterpret_cast_convertible<From, To>::value &&
 		sizeof(To) <= sizeof(From) &&
 		std::is_trivial<To>::value &&
@@ -258,7 +263,8 @@ namespace bitstuff {
 	}
 	
 	template <class To, class From>
-	typename std::enable_if<
+	[[gnu::always_inline]]
+	inline typename std::enable_if<
 		!is_reinterpret_cast_convertible<From, To>::value &&
 		std::is_trivial<To>::value &&
 		std::is_trivially_copyable<From>::value &&
@@ -298,6 +304,7 @@ namespace bitstuff {
 			>::type));
 		return result;
 	}
+
 }
 
 #endif
