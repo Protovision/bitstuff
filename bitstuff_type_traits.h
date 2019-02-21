@@ -122,7 +122,13 @@ namespace bitstuff {
 	{
 		return reinterpret_cast<To>(from);
 	}
-	
+
+	/*
+	 * Should probably use std::addressof but it's slower because it 
+	 * generates a function call and wastes CPU instructions for 
+	 * types that don't overload operator&
+	 */
+
 	template <class To, class From>
 	typename std::enable_if<
 		!is_reinterpret_cast_convertible<From, To>::value &&
@@ -134,8 +140,8 @@ namespace bitstuff {
 	{
 		To result{};
 		std::memcpy(
-			std::addressof(result),
-			std::addressof(from),
+			&result,
+			&from,
 			sizeof(From));
 		return result;
 	}
@@ -151,8 +157,8 @@ namespace bitstuff {
 	{
 		To result{};
 		std::memcpy(
-			std::addressof(result),
-			std::addressof(from),
+			&result,
+			&from,
 			sizeof(From));
 		return result;
 	}
@@ -168,8 +174,8 @@ namespace bitstuff {
 	{
 		To result{};
 		std::memcpy(
-			std::addressof(result),
-			std::addressof(from),
+			&result,
+			&from,
 			sizeof(To));
 		return result;
 	}
@@ -184,8 +190,8 @@ namespace bitstuff {
 	{
 		To result{};
 		std::memcpy(
-			std::addressof(result),
-			std::addressof(from),
+			&result,
+			&from,
 			sizeof(typename std::conditional<
 				sizeof(To) >= sizeof(From),
 				From,
