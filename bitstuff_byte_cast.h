@@ -112,113 +112,13 @@ _BITSTUFF_PASS_BY_REF_AND_DEFAULT_INIT_RESULT_MEMCPY_OVERLOAD(
 _BITSTUFF_PASS_BY_REF_AND_VALUE_INIT_RESULT_MEMCPY_OVERLOAD(
 	resized_byte_cast)
 
-
-
-
-/*
-#define _BITSTUFF_PASS_BY_COPY() _BITSTUFF_WRAP(From)
-#define _BITSTUFF_PASS_BY_REF() _BITSTUFF_WRAP(const From&)
-#define _BITSTUFF_DEFAULT_INIT_RESULT() _BITSTUFF_VOID()
-#define _BITSTUFF_VALUE_INIT_RESULT() _BITSTUFF_WRAP({})
-*/
-/*
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(_BITSTUFF_SHOULD_PASS_BY_COPY()),
-		byte_cast,
-		_BITSTUFF_PASS_BY_COPY*/
-/*
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(is_within_sizeof_pointer<From>::value),
-		byte_cast,
-		_BITSTUFF_WRAP(From),
-		_BITSTUFF_VOID())
-
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(!is_within_sizeof_pointer<From>::value),
-		byte_cast,
-		_BITSTUFF_WRAP(const From&),
-		_BITSTUFF_VOID())
-
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(
-			is_within_sizeof_pointer<From>::value &&
-			is_sizeof_equal<From, To>::value),
-		extended_byte_cast,
-		_BITSTUFF_WRAP(From),
-		_BITSTUFF_VOID())
-
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(
-			is_within_sizeof_pointer<From>::value &&
-			is_sizeof_less<From, To>::value),
-		extended_byte_cast,
-		_BITSTUFF_WRAP(From),
-		_BITSTUFF_WRAP({}))
-
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(
-			!is_within_sizeof_pointer<From>::value &&
-			is_sizeof_equal<From, To>::value),
-		extended_byte_cast,
-		_BITSTUFF_WRAP(const From&),
-		_BITSTUFF_VOID())
-
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(
-			!is_within_sizeof_pointer<From>::value &&
-			is_sizeof_less<From, To>::value),
-		extended_byte_cast,
-		_BITSTUFF_WRAP(const From&),
-		_BITSTUFF_WRAP({}))
-
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(is_within_sizeof_pointer<From>::value),
-		truncated_byte_cast,
-		_BITSTUFF_WRAP(From),
-		_BITSTUFF_VOID())
-
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(!is_within_sizeof_pointer<From>::value),
-		truncated_byte_cast,
-		_BITSTUFF_WRAP(const From&),
-		_BITSTUFF_VOID())
-
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(
-			is_within_sizeof_pointer<From>::value &&
-			is_sizeof_greater_equal<From, To>::value),
-		resized_byte_cast,
-		_BITSTUFF_WRAP(From),
-		_BITSTUFF_VOID())
-
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(
-			is_within_sizeof_pointer<From>::value &&
-			is_sizeof_less<From, To>::value),
-		resized_byte_cast,
-		_BITSTUFF_WRAP(From),
-		_BITSTUFF_WRAP({}))
-
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(
-			!is_within_sizeof_pointer<From>::value &&
-			is_sizeof_greater_equal<From, To>::value),
-		resized_byte_cast,
-		_BITSTUFF_WRAP(const From&),
-		_BITSTUFF_VOID())
-
-	_BITSTUFF_DEFINE_MEMCPY_OVERLOAD( \
-		_BITSTUFF_WRAP(
-			!is_within_sizeof_pointer<From>::value &&
-			is_sizeof_less<From, To>::value),
-		resized_byte_cast,
-		_BITSTUFF_WRAP(const From&),
-		_BITSTUFF_WRAP({}))
-*/
-
 #undef _BITSTUFF_VOID
 #undef _BITSTUFF_WRAP
 #undef _BITSTUFF_DEFINE_MEMCPY_OVERLOAD
+#undef _BITSTUFF_PASS_BY_COPY_AND_DEFAULT_INIT_RESULT_MEMCPY_OVERLOAD
+#undef _BITSTUFF_PASS_BY_COPY_AND_VALUE_INIT_RESULT_MEMCPY_OVERLOAD
+#undef _BITSTUFF_PASS_BY_REF_AND_DEFAULT_INIT_RESULT_MEMCPY_OVERLOAD
+#undef _BITSTUFF_PASS_BY_REF_AND_VALUE_INIT_RESULT_MEMCPY_OVERLOAD
 
 }
 
