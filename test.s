@@ -386,14 +386,14 @@ _Z20do_fastest_byte_castv:
 	.seh_stackalloc	16
 	.seh_endprologue
 /APP
- # 14 "test.cpp" 1
+ # 15 "test.cpp" 1
 	# BEGIN FASTEST BYTE CAST
  # 0 "" 2
 /NO_APP
 	movq	.refptr._ZSt3cin(%rip), %rax
 	movq	%rax, -8(%rbp)
 /APP
- # 16 "test.cpp" 1
+ # 17 "test.cpp" 1
 	# END FASTEST BYTE CAST
  # 0 "" 2
 /NO_APP
@@ -415,7 +415,7 @@ _Z17do_fast_byte_castv:
 	.seh_stackalloc	16
 	.seh_endprologue
 /APP
- # 21 "test.cpp" 1
+ # 22 "test.cpp" 1
 	# BEGIN FAST BYTE CAST
  # 0 "" 2
 /NO_APP
@@ -424,7 +424,7 @@ _Z17do_fast_byte_castv:
 	movl	-4(%rbp), %eax
 	movl	%eax, -8(%rbp)
 /APP
- # 23 "test.cpp" 1
+ # 24 "test.cpp" 1
 	# END FAST BYTE CAST
  # 0 "" 2
 /NO_APP
@@ -446,7 +446,7 @@ _Z12do_byte_castv:
 	.seh_setframe	%rbp, 128
 	.seh_endprologue
 /APP
- # 28 "test.cpp" 1
+ # 29 "test.cpp" 1
 	# BEGIN BYTE CAST
  # 0 "" 2
 /NO_APP
@@ -455,7 +455,7 @@ _Z12do_byte_castv:
 	movq	%rax, %rcx
 	call	_ZN6swoope9byte_castI1U1TEENSt9enable_ifIXaaaantsrNS_31is_reinterpret_cast_convertibleIT0_T_EE5valuentsrNS_24is_within_sizeof_pointerIS5_EE5valuesrNS_23is_sizeof_greater_equalIS5_S6_EE5valueES6_E4typeERKS5_
 /APP
- # 30 "test.cpp" 1
+ # 31 "test.cpp" 1
 	# END BYTE CAST
  # 0 "" 2
 /NO_APP
@@ -495,7 +495,8 @@ main:
 	movl	$1042284544, -84(%rbp)
 	movl	-84(%rbp), %eax
 	movl	%eax, -88(%rbp)
-	movss	-88(%rbp), %xmm0
+	leaq	-88(%rbp), %rax
+	movss	(%rax), %xmm0
 	movaps	%xmm0, %xmm1
 	movq	%rdx, %rcx
 	call	_ZNSolsEf
@@ -507,7 +508,8 @@ main:
 	movss	%xmm0, -92(%rbp)
 	movl	-92(%rbp), %eax
 	movl	%eax, -96(%rbp)
-	movl	-96(%rbp), %eax
+	leaq	-96(%rbp), %rax
+	movl	(%rax), %eax
 	movl	%eax, %edx
 	leaq	-64(%rbp), %rax
 	movq	%rax, %rcx
@@ -528,7 +530,8 @@ main:
 	movsd	%xmm0, -72(%rbp)
 	movq	-72(%rbp), %rax
 	movq	%rax, -80(%rbp)
-	movq	-80(%rbp), %rax
+	leaq	-80(%rbp), %rax
+	movq	(%rax), %rax
 	movq	%rax, %rdx
 	call	_ZNSolsEm
 	movq	.refptr._ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_(%rip), %rdx
@@ -551,13 +554,80 @@ _ZN6swoope9byte_castI1U1TEENSt9enable_ifIXaaaantsrNS_31is_reinterpret_cast_conve
 	.seh_pushreg	%rbp
 	pushq	%rbx
 	.seh_pushreg	%rbx
-	movq	%rsp, %rbp
-	.seh_setframe	%rbp, 0
+	subq	$264, %rsp
+	.seh_stackalloc	264
+	leaq	128(%rsp), %rbp
+	.seh_setframe	%rbp, 128
 	.seh_endprologue
+	movq	%rcx, 160(%rbp)
+	movq	%rdx, 168(%rbp)
+	movq	168(%rbp), %rax
+	movq	(%rax), %rdx
+	movq	8(%rax), %rcx
+	movq	%rdx, -128(%rbp)
+	movq	%rcx, -120(%rbp)
+	movq	16(%rax), %rdx
+	movq	24(%rax), %rcx
+	movq	%rdx, -112(%rbp)
+	movq	%rcx, -104(%rbp)
+	movq	32(%rax), %rdx
+	movq	40(%rax), %rcx
+	movq	%rdx, -96(%rbp)
+	movq	%rcx, -88(%rbp)
+	movq	48(%rax), %rdx
+	movq	56(%rax), %rcx
+	movq	%rdx, -80(%rbp)
+	movq	%rcx, -72(%rbp)
+	movq	64(%rax), %rdx
+	movq	72(%rax), %rcx
+	movq	%rdx, -64(%rbp)
+	movq	%rcx, -56(%rbp)
+	movq	80(%rax), %rdx
+	movq	88(%rax), %rcx
+	movq	%rdx, -48(%rbp)
+	movq	%rcx, -40(%rbp)
+	movq	96(%rax), %rdx
+	movq	104(%rax), %rcx
+	movq	%rdx, -32(%rbp)
+	movq	%rcx, -24(%rbp)
+	movq	112(%rax), %rdx
+	movq	120(%rax), %rcx
+	movq	%rdx, -16(%rbp)
+	movq	%rcx, -8(%rbp)
+	movq	128(%rax), %rdx
+	movq	136(%rax), %rcx
+	movq	%rdx, 0(%rbp)
+	movq	%rcx, 8(%rbp)
+	movq	144(%rax), %rdx
+	movq	152(%rax), %rcx
+	movq	%rdx, 16(%rbp)
 	movq	%rcx, 24(%rbp)
+	movq	160(%rax), %rdx
+	movq	168(%rax), %rcx
 	movq	%rdx, 32(%rbp)
-	movq	24(%rbp), %rax
-	movq	32(%rbp), %rdx
+	movq	%rcx, 40(%rbp)
+	movq	176(%rax), %rdx
+	movq	184(%rax), %rcx
+	movq	%rdx, 48(%rbp)
+	movq	%rcx, 56(%rbp)
+	movq	192(%rax), %rdx
+	movq	200(%rax), %rcx
+	movq	%rdx, 64(%rbp)
+	movq	%rcx, 72(%rbp)
+	movq	208(%rax), %rdx
+	movq	216(%rax), %rcx
+	movq	%rdx, 80(%rbp)
+	movq	%rcx, 88(%rbp)
+	movq	224(%rax), %rdx
+	movq	232(%rax), %rcx
+	movq	%rdx, 96(%rbp)
+	movq	%rcx, 104(%rbp)
+	movq	248(%rax), %rdx
+	movq	240(%rax), %rax
+	movq	%rax, 112(%rbp)
+	movq	%rdx, 120(%rbp)
+	leaq	-128(%rbp), %rdx
+	movq	160(%rbp), %rax
 	movq	(%rdx), %rcx
 	movq	8(%rdx), %rbx
 	movq	%rcx, (%rax)
@@ -622,8 +692,8 @@ _ZN6swoope9byte_castI1U1TEENSt9enable_ifIXaaaantsrNS_31is_reinterpret_cast_conve
 	movq	240(%rdx), %rdx
 	movq	%rdx, 240(%rax)
 	movq	%rcx, 248(%rax)
-	nop
-	movq	24(%rbp), %rax
+	movq	160(%rbp), %rax
+	addq	$264, %rsp
 	popq	%rbx
 	popq	%rbp
 	ret

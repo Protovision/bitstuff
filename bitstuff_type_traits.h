@@ -81,7 +81,7 @@ namespace swoope {
 		std::integral_constant<
 			bool,
 			std::is_trivially_copyable<From>::value &&
-			std::is_trivial<To>::value
+			std::is_trivially_copyable<To>::value
 		>::type
 	{
 	};

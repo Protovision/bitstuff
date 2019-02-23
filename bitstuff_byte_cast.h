@@ -10,7 +10,7 @@ namespace swoope {
 	[[gnu::always_inline]] inline \
 	typename std::enable_if< \
 		is_reinterpret_cast_convertible<From, To>::value, To \
-	>::type IDENT(From from) \
+	>::type IDENT(From from) noexcept \
 	{ \
 		static_assert(is_ ## IDENT ## _convertible<From, To>::value); \
 		return reinterpret_cast<To>(from); \
@@ -33,15 +33,16 @@ _BITSTUFF_DEFINE_REINTERPRET_CAST_OVERLOAD(resized_byte_cast)
 		!is_reinterpret_cast_convertible<From, To>::value && \
 		COND, \
 		To \
-	>::type IDENT(PTYPE from) \
+	>::type IDENT(PTYPE from) noexcept \
 	{ \
 		static_assert(is_ ## IDENT ## _convertible<From, To>::value); \
-		To result RINIT; \
+		typename std::aligned_storage<sizeof(To), alignof(To)>::type \
+			result RINIT; \
 		std::memcpy(&result, &from, sizeof( \
 			typename std::conditional< \
 				is_sizeof_less_equal<From, To>::value, From, To \
 			>::type)); \
-		return result; \
+		return *reinterpret_cast<const To*>(&result); \
 	}
 
 #define _BITSTUFF_PASS_BY_COPY_AND_DEFAULT_INIT_RESULT_MEMCPY_OVERLOAD(ID) \
