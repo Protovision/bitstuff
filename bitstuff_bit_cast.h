@@ -50,6 +50,10 @@
  *	argument type is found, respectively, to be equal to, less than, or 
  *	greater than the size of the result type.
  *
+ * TODO:
+ *	- Create macro for using std::memcpy instead of swoope::constexpr_memcpy
+ *		(This will unfortunately make the bit_cast functions not constexpr)
+ *
  */
 
 #include "bitstuff_type_traits.h"

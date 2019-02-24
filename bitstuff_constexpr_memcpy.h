@@ -8,9 +8,12 @@
  *
  * A portable constexpr memcpy for C++ (-fno-strict-aliasing):
  *
- *  template <std::size_t N>
+ *	template <std::size_t N>
  *	constexpr void* constexpr_memcpy(void* dst, const void* src);
  *
+ * TODO:
+ *	- Support different alignments
+ *	- Create macro for falling back to simple byte-by-byte copy
  */
 
 #include <cstddef>
