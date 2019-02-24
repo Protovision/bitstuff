@@ -8,16 +8,17 @@
  *
  * Includes:
  *	"bitstuff_type_traits.h"
+ *	"bitstuff_constexpr_memcpy.h"
  *	<cstring>
  * Functions:
- *	To swoope::bit_cast<To, From>(From)
- *	To swoope::bit_cast<To, From>(const From&)
- *	To swoope::extended_bit_cast<To, From>(From)
- *	To swoope::extended_bit_cast<To, From>(const From&)
- *	To swoope::truncated_bit_cast<To, From>(From)
- *	To swoope::truncated_bit_cast<To, From>(const From&)
- *	To swoope::resized_bit_cast<To, From>(From)
- *	To swoope::resized_bit_cast<To, From>(const From&)
+ *	constexpr To swoope::bit_cast<To, From>(From) noexcept
+ *	constexpr To swoope::bit_cast<To, From>(const From&) noexcept
+ *	constexpr To swoope::extended_bit_cast<To, From>(From) noexcept
+ *	constexpr To swoope::extended_bit_cast<To, From>(const From&) noexcept
+ *	constexpr To swoope::truncated_bit_cast<To, From>(From) noexcept
+ *	constexpr To swoope::truncated_bit_cast<To, From>(const From&) noexcept
+ *	constexpr To swoope::resized_bit_cast<To, From>(From) noexcept
+ *	constexpr To swoope::resized_bit_cast<To, From>(const From&) noexcept
  *
  * Summary:
  *	If swoope::is_bit_cast_convertible<From, To>::value is true (that is, the 
@@ -28,9 +29,10 @@
  *	of a pointer, otherwise the overload that receives it's argument by 
  *	reference is chosen. Internally, swoope::bit_cast uses reinterpret_cast 
  *	if swoope::is_reinterpret_cast_convertible<From, To>::value is true, 
- *	otherwise std::memcpy is used. If BITSTUFF_ONLY_MEMCPY_BIT_CAST, then the 
- *	functions bit_cast, extended_bit_cast, truncated_bit_cast, and 
- *	resized_bit_cast will always use std::memcpy to convert the types.
+ *	otherwise swoope::constexpr_memcpy is used. If 
+ *	BITSTUFF_ONLY_MEMCPY_BIT_CAST, then the functions bit_cast, 
+ *	extended_bit_cast, truncated_bit_cast, and resized_bit_cast will always use 
+ *	swoope::constexpr_memcpy to convert the types.
  *
  *	extended_bit_cast is a variation of bit_cast that can be used if the size 
  *	of the argument type is less than the size of the result type, in which 
@@ -51,6 +53,7 @@
  */
 
 #include "bitstuff_type_traits.h"
+#include "bitstuff_constexpr_memcpy.h"
 #include <cstring>
 
 #define _BITSTUFF_VOID()
@@ -63,7 +66,7 @@ namespace swoope {
 #define _BITSTUFF_REINTERPRET_CAST(FUNCTION_NAME) \
 	template <class To, class From> \
 	[[gnu::always_inline]] inline \
-	typename std::enable_if< \
+	constexpr typename std::enable_if< \
 		is_reinterpret_cast_convertible<From, To>::value, \
 		To \
 	>::type FUNCTION_NAME(From from) noexcept \
@@ -89,6 +92,13 @@ namespace swoope {
 
 #endif /* BITSTUFF_ONLY_MEMCPY_BIT_CAST */
 
+#if __cplusplus >= 201703L
+#define _BITSTUFF_MEMCPY_RESULT_DEFAULT_INIT() _BITSTUFF_WRAP()
+#else
+#define _BITSTUFF_MEMCPY_RESULT_DEFAULT_INIT() _BITSTUFF_WRAP({})
+#endif
+#define _BITSTUFF_MEMCPY_RESULT_VALUE_INIT() _BITSTUFF_WRAP({})
+
 #define _BITSTUFF_MEMCPY( \
 	ENABLE_IF_CONDITION, \
 	FUNCTION_NAME, \
@@ -96,20 +106,22 @@ namespace swoope {
 	RESULT_INITIALIZER) \
 	template <class To, class From> \
 	[[gnu::always_inline]] inline \
-	typename std::enable_if< \
+	constexpr typename std::enable_if< \
 		_BITSTUFF_MEMCPY_ENABLE_IF_CONDITION_1() && \
 		ENABLE_IF_CONDITION, To \
 	>::type FUNCTION_NAME(PARAMETER_TYPE from) noexcept \
 	{ \
 		static_assert(is_ ## FUNCTION_NAME ## _convertible<From, To>::value); \
-		typename std::aligned_storage<sizeof(To), alignof(To)>::type \
+		constexpr typename \
+			std::aligned_storage<sizeof(To), alignof(To)>::type \
 			result RESULT_INITIALIZER; \
-		std::memcpy( \
-			&result, \
-			&from, \
+		constexpr_memcpy< \
 			sizeof(typename std::conditional< \
 				is_sizeof_less_equal<From, To>::value, From, To \
-			>::type)); \
+			>::type) \
+		>(const_cast< \
+				typename std::remove_const<decltype(result)>::type* \
+			>(&result), &from); \
 		return *reinterpret_cast<const To*>(&result); \
 	}
 
@@ -120,14 +132,14 @@ namespace swoope {
 			is_sizeof_greater_equal<From, To>::value), \
 		FUNCTION_NAME, \
 		_BITSTUFF_WRAP(From), \
-		_BITSTUFF_WRAP()) \
+		_BITSTUFF_MEMCPY_RESULT_DEFAULT_INIT()) \
 	_BITSTUFF_MEMCPY( \
 		_BITSTUFF_WRAP( \
 			!is_within_sizeof_pointer<From>::value && \
 			is_sizeof_greater_equal<From, To>::value), \
 		FUNCTION_NAME, \
 		_BITSTUFF_WRAP(const From&), \
-		_BITSTUFF_WRAP())
+		_BITSTUFF_MEMCPY_RESULT_DEFAULT_INIT())
 
 #define _BITSTUFF_MEMCPY_FUNCTIONS(FUNCTION_NAME) \
 	_BITSTUFF_MEMCPY( \
@@ -136,14 +148,14 @@ namespace swoope {
 			is_sizeof_less<From, To>::value), \
 		FUNCTION_NAME, \
 		_BITSTUFF_WRAP(From), \
-		_BITSTUFF_WRAP({})) \
+		_BITSTUFF_MEMCPY_RESULT_VALUE_INIT()) \
 	_BITSTUFF_MEMCPY( \
 		_BITSTUFF_WRAP( \
 			!is_within_sizeof_pointer<From>::value && \
 			is_sizeof_less<From, To>::value), \
 		FUNCTION_NAME, \
 		_BITSTUFF_WRAP(const From&), \
-		_BITSTUFF_WRAP({}))
+		_BITSTUFF_MEMCPY_RESULT_VALUE_INIT())
 
 	_BITSTUFF_UNINITIALIZED_MEMCPY_FUNCTIONS(bit_cast)
 	_BITSTUFF_UNINITIALIZED_MEMCPY_FUNCTIONS(extended_bit_cast)
