@@ -1,5 +1,31 @@
 #ifndef BITSTUFF_TYPE_TRAITS
 #define BITSTUFF_TYPE_TRAITS
+
+/*
+ * File: bitstuff_type_traits.h
+ * Author: Mark Swoope
+ * Date: February 23, 2019
+ * 
+ * Includes:
+ *	<type_traits>
+ * Classes:
+ *	swoope::is_sizeof_equal<T, U>
+ *	swoope::is_sizeof_not_equal<T, U>
+ *	swoope::is_sizeof_less<T, U>
+ *	swoope::is_sizeof_less_equal<T, U>
+ *	swoope::is_sizeof_greater_equal<T, U>
+ *	swoope::is_within_sizeof_short<T>
+ *	swoope::is_within_sizeof_int<T>
+ *	swoope::is_within_sizeof_long<T>
+ *	swoope::is_within_sizeof_long_long<T>
+ *	swoope::is_within_sizeof_pointer<T>
+ *	swoope::is_reinterpret_cast_convertible<From, To>
+ *	swoope::is_bit_cast_convertible<From, To>
+ *	swoope::is_extended_bit_cast_convertible<From, To>
+ *	swoope::is_truncated_bit_cast_convertible<From, To>
+ *	swoope::is_resized_bit_cast_convertible<From, To>	
+ */
+
 #include <type_traits>
 
 namespace swoope {
@@ -77,7 +103,7 @@ namespace swoope {
 	};
 	
 	template <class From, class To>
-	struct is_resized_byte_cast_convertible :
+	struct is_resized_bit_cast_convertible :
 		std::integral_constant<
 			bool,
 			std::is_trivially_copyable<From>::value &&
@@ -92,19 +118,19 @@ namespace swoope {
 		std::integral_constant< \
 			bool, \
 			COND<From, To>::value && \
-			is_resized_byte_cast_convertible<From, To>::value \
+			is_resized_bit_cast_convertible<From, To>::value \
 		>::type {};
 
 	_BITSTUFF_DEFINE_IS_CONVERTIBLE(
-		byte_cast,
+		bit_cast,
 		is_sizeof_equal)
 
 	_BITSTUFF_DEFINE_IS_CONVERTIBLE(
-		extended_byte_cast,
+		extended_bit_cast,
 		is_sizeof_less_equal)
 
 	_BITSTUFF_DEFINE_IS_CONVERTIBLE(
-		truncated_byte_cast,
+		truncated_bit_cast,
 		is_sizeof_greater_equal)
 
 #undef _BITSTUFF_DEFINE_IS_CONVERTIBLE
