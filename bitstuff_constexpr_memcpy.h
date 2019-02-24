@@ -21,7 +21,7 @@ namespace swoope {
 	template <std::size_t N>
 	[[gnu::always_inline]] inline
 	constexpr typename std::enable_if<N == 0>::type*
-	constexpr_memcpy(void* dst, const void* src)
+	constexpr_memcpy(void* dst, const void* src) noexcept
 	{
 		return dst;
 	}
@@ -31,7 +31,7 @@ namespace swoope {
 	[[gnu::always_inline]] inline \
 	constexpr \
 	typename std::enable_if<N == sizeof(TYPE)>::type* \
-	constexpr_memcpy(void* dst, const void* src) \
+	constexpr_memcpy(void* dst, const void* src) noexcept \
 	{ \
 		*reinterpret_cast<TYPE*>(dst) = *reinterpret_cast<const TYPE*>(src); \
 		return dst; \
@@ -70,7 +70,7 @@ namespace swoope {
 #endif
 		&& N != 0
 	>::type*
-	constexpr_memcpy(void* dst, const void* src)
+	constexpr_memcpy(void* dst, const void* src) noexcept
 	{
 		std::size_t n = N;
 		unsigned char* d = reinterpret_cast<unsigned char*>(dst);
