@@ -367,16 +367,19 @@ _ZStL13allocator_arg:
 	.space 1
 _ZStL6ignore:
 	.space 1
+	.align 8
+_ZL17large_object_size:
+	.quad	1024
 	.globl	large_object
 	.bss
 	.align 32
 large_object:
-	.space 256
+	.space 1024
 	.text
-	.globl	_Z20do_fastest_byte_castv
-	.def	_Z20do_fastest_byte_castv;	.scl	2;	.type	32;	.endef
-	.seh_proc	_Z20do_fastest_byte_castv
-_Z20do_fastest_byte_castv:
+	.globl	_Z19do_fastest_bit_castv
+	.def	_Z19do_fastest_bit_castv;	.scl	2;	.type	32;	.endef
+	.seh_proc	_Z19do_fastest_bit_castv
+_Z19do_fastest_bit_castv:
 .LFB2253:
 	pushq	%rbp
 	.seh_pushreg	%rbp
@@ -386,14 +389,14 @@ _Z20do_fastest_byte_castv:
 	.seh_stackalloc	16
 	.seh_endprologue
 /APP
- # 15 "test.cpp" 1
+ # 17 "test.cpp" 1
 	# BEGIN FASTEST BYTE CAST
  # 0 "" 2
 /NO_APP
 	movq	.refptr._ZSt3cin(%rip), %rax
 	movq	%rax, -8(%rbp)
 /APP
- # 17 "test.cpp" 1
+ # 19 "test.cpp" 1
 	# END FASTEST BYTE CAST
  # 0 "" 2
 /NO_APP
@@ -402,10 +405,10 @@ _Z20do_fastest_byte_castv:
 	popq	%rbp
 	ret
 	.seh_endproc
-	.globl	_Z17do_fast_byte_castv
-	.def	_Z17do_fast_byte_castv;	.scl	2;	.type	32;	.endef
-	.seh_proc	_Z17do_fast_byte_castv
-_Z17do_fast_byte_castv:
+	.globl	_Z16do_fast_bit_castv
+	.def	_Z16do_fast_bit_castv;	.scl	2;	.type	32;	.endef
+	.seh_proc	_Z16do_fast_bit_castv
+_Z16do_fast_bit_castv:
 .LFB2254:
 	pushq	%rbp
 	.seh_pushreg	%rbp
@@ -415,7 +418,7 @@ _Z17do_fast_byte_castv:
 	.seh_stackalloc	16
 	.seh_endprologue
 /APP
- # 22 "test.cpp" 1
+ # 24 "test.cpp" 1
 	# BEGIN FAST BYTE CAST
  # 0 "" 2
 /NO_APP
@@ -424,7 +427,7 @@ _Z17do_fast_byte_castv:
 	movl	-4(%rbp), %eax
 	movl	%eax, -8(%rbp)
 /APP
- # 24 "test.cpp" 1
+ # 26 "test.cpp" 1
 	# END FAST BYTE CAST
  # 0 "" 2
 /NO_APP
@@ -433,34 +436,50 @@ _Z17do_fast_byte_castv:
 	popq	%rbp
 	ret
 	.seh_endproc
-	.globl	_Z12do_byte_castv
-	.def	_Z12do_byte_castv;	.scl	2;	.type	32;	.endef
-	.seh_proc	_Z12do_byte_castv
-_Z12do_byte_castv:
+	.globl	_Z11do_bit_castv
+	.def	_Z11do_bit_castv;	.scl	2;	.type	32;	.endef
+	.seh_proc	_Z11do_bit_castv
+_Z11do_bit_castv:
 .LFB2255:
 	pushq	%rbp
 	.seh_pushreg	%rbp
-	subq	$288, %rsp
-	.seh_stackalloc	288
+	pushq	%rdi
+	.seh_pushreg	%rdi
+	pushq	%rsi
+	.seh_pushreg	%rsi
+	subq	$2048, %rsp
+	.seh_stackalloc	2048
 	leaq	128(%rsp), %rbp
 	.seh_setframe	%rbp, 128
 	.seh_endprologue
 /APP
- # 29 "test.cpp" 1
+ # 31 "test.cpp" 1
 	# BEGIN BYTE CAST
  # 0 "" 2
 /NO_APP
-	leaq	-96(%rbp), %rax
+	leaq	-128(%rbp), %rax
 	leaq	large_object(%rip), %rdx
-	movq	%rax, %rcx
-	call	_ZN6swoope9byte_castI1U1TEENSt9enable_ifIXaaaantsrNS_31is_reinterpret_cast_convertibleIT0_T_EE5valuentsrNS_24is_within_sizeof_pointerIS5_EE5valuesrNS_23is_sizeof_greater_equalIS5_S6_EE5valueES6_E4typeERKS5_
+	movl	$128, %ecx
+	movq	%rax, %rdi
+	movq	%rdx, %rsi
+	rep movsq
+	leaq	-128(%rbp), %rdx
+	leaq	896(%rbp), %rax
+	movq	%rdx, %r8
+	movl	$128, %edx
+	movq	%rax, %rdi
+	movq	%r8, %rsi
+	movq	%rdx, %rcx
+	rep movsq
 /APP
- # 31 "test.cpp" 1
+ # 33 "test.cpp" 1
 	# END BYTE CAST
  # 0 "" 2
 /NO_APP
 	nop
-	addq	$288, %rsp
+	addq	$2048, %rsp
+	popq	%rsi
+	popq	%rdi
 	popq	%rbp
 	ret
 	.seh_endproc
@@ -480,9 +499,9 @@ main:
 	.seh_setframe	%rbp, 128
 	.seh_endprologue
 	call	__main
-	call	_Z20do_fastest_byte_castv
-	call	_Z17do_fast_byte_castv
-	call	_Z12do_byte_castv
+	call	_Z19do_fastest_bit_castv
+	call	_Z16do_fast_bit_castv
+	call	_Z11do_bit_castv
 	movq	$0, -56(%rbp)
 	movl	$0, %eax
 	movq	%rax, %rdx
@@ -539,161 +558,6 @@ main:
 	call	_ZNSolsEPFRSoS_E
 	movl	$0, %eax
 	addq	$88, %rsp
-	popq	%rbx
-	popq	%rbp
-	ret
-	.seh_endproc
-	.section	.text$_ZN6swoope9byte_castI1U1TEENSt9enable_ifIXaaaantsrNS_31is_reinterpret_cast_convertibleIT0_T_EE5valuentsrNS_24is_within_sizeof_pointerIS5_EE5valuesrNS_23is_sizeof_greater_equalIS5_S6_EE5valueES6_E4typeERKS5_,"x"
-	.linkonce discard
-	.globl	_ZN6swoope9byte_castI1U1TEENSt9enable_ifIXaaaantsrNS_31is_reinterpret_cast_convertibleIT0_T_EE5valuentsrNS_24is_within_sizeof_pointerIS5_EE5valuesrNS_23is_sizeof_greater_equalIS5_S6_EE5valueES6_E4typeERKS5_
-	.def	_ZN6swoope9byte_castI1U1TEENSt9enable_ifIXaaaantsrNS_31is_reinterpret_cast_convertibleIT0_T_EE5valuentsrNS_24is_within_sizeof_pointerIS5_EE5valuesrNS_23is_sizeof_greater_equalIS5_S6_EE5valueES6_E4typeERKS5_;	.scl	2;	.type	32;	.endef
-	.seh_proc	_ZN6swoope9byte_castI1U1TEENSt9enable_ifIXaaaantsrNS_31is_reinterpret_cast_convertibleIT0_T_EE5valuentsrNS_24is_within_sizeof_pointerIS5_EE5valuesrNS_23is_sizeof_greater_equalIS5_S6_EE5valueES6_E4typeERKS5_
-_ZN6swoope9byte_castI1U1TEENSt9enable_ifIXaaaantsrNS_31is_reinterpret_cast_convertibleIT0_T_EE5valuentsrNS_24is_within_sizeof_pointerIS5_EE5valuesrNS_23is_sizeof_greater_equalIS5_S6_EE5valueES6_E4typeERKS5_:
-.LFB2515:
-	pushq	%rbp
-	.seh_pushreg	%rbp
-	pushq	%rbx
-	.seh_pushreg	%rbx
-	subq	$264, %rsp
-	.seh_stackalloc	264
-	leaq	128(%rsp), %rbp
-	.seh_setframe	%rbp, 128
-	.seh_endprologue
-	movq	%rcx, 160(%rbp)
-	movq	%rdx, 168(%rbp)
-	movq	168(%rbp), %rax
-	movq	(%rax), %rdx
-	movq	8(%rax), %rcx
-	movq	%rdx, -128(%rbp)
-	movq	%rcx, -120(%rbp)
-	movq	16(%rax), %rdx
-	movq	24(%rax), %rcx
-	movq	%rdx, -112(%rbp)
-	movq	%rcx, -104(%rbp)
-	movq	32(%rax), %rdx
-	movq	40(%rax), %rcx
-	movq	%rdx, -96(%rbp)
-	movq	%rcx, -88(%rbp)
-	movq	48(%rax), %rdx
-	movq	56(%rax), %rcx
-	movq	%rdx, -80(%rbp)
-	movq	%rcx, -72(%rbp)
-	movq	64(%rax), %rdx
-	movq	72(%rax), %rcx
-	movq	%rdx, -64(%rbp)
-	movq	%rcx, -56(%rbp)
-	movq	80(%rax), %rdx
-	movq	88(%rax), %rcx
-	movq	%rdx, -48(%rbp)
-	movq	%rcx, -40(%rbp)
-	movq	96(%rax), %rdx
-	movq	104(%rax), %rcx
-	movq	%rdx, -32(%rbp)
-	movq	%rcx, -24(%rbp)
-	movq	112(%rax), %rdx
-	movq	120(%rax), %rcx
-	movq	%rdx, -16(%rbp)
-	movq	%rcx, -8(%rbp)
-	movq	128(%rax), %rdx
-	movq	136(%rax), %rcx
-	movq	%rdx, 0(%rbp)
-	movq	%rcx, 8(%rbp)
-	movq	144(%rax), %rdx
-	movq	152(%rax), %rcx
-	movq	%rdx, 16(%rbp)
-	movq	%rcx, 24(%rbp)
-	movq	160(%rax), %rdx
-	movq	168(%rax), %rcx
-	movq	%rdx, 32(%rbp)
-	movq	%rcx, 40(%rbp)
-	movq	176(%rax), %rdx
-	movq	184(%rax), %rcx
-	movq	%rdx, 48(%rbp)
-	movq	%rcx, 56(%rbp)
-	movq	192(%rax), %rdx
-	movq	200(%rax), %rcx
-	movq	%rdx, 64(%rbp)
-	movq	%rcx, 72(%rbp)
-	movq	208(%rax), %rdx
-	movq	216(%rax), %rcx
-	movq	%rdx, 80(%rbp)
-	movq	%rcx, 88(%rbp)
-	movq	224(%rax), %rdx
-	movq	232(%rax), %rcx
-	movq	%rdx, 96(%rbp)
-	movq	%rcx, 104(%rbp)
-	movq	248(%rax), %rdx
-	movq	240(%rax), %rax
-	movq	%rax, 112(%rbp)
-	movq	%rdx, 120(%rbp)
-	leaq	-128(%rbp), %rdx
-	movq	160(%rbp), %rax
-	movq	(%rdx), %rcx
-	movq	8(%rdx), %rbx
-	movq	%rcx, (%rax)
-	movq	%rbx, 8(%rax)
-	movq	16(%rdx), %rcx
-	movq	24(%rdx), %rbx
-	movq	%rcx, 16(%rax)
-	movq	%rbx, 24(%rax)
-	movq	32(%rdx), %rcx
-	movq	40(%rdx), %rbx
-	movq	%rcx, 32(%rax)
-	movq	%rbx, 40(%rax)
-	movq	48(%rdx), %rcx
-	movq	56(%rdx), %rbx
-	movq	%rcx, 48(%rax)
-	movq	%rbx, 56(%rax)
-	movq	64(%rdx), %rcx
-	movq	72(%rdx), %rbx
-	movq	%rcx, 64(%rax)
-	movq	%rbx, 72(%rax)
-	movq	80(%rdx), %rcx
-	movq	88(%rdx), %rbx
-	movq	%rcx, 80(%rax)
-	movq	%rbx, 88(%rax)
-	movq	96(%rdx), %rcx
-	movq	104(%rdx), %rbx
-	movq	%rcx, 96(%rax)
-	movq	%rbx, 104(%rax)
-	movq	112(%rdx), %rcx
-	movq	120(%rdx), %rbx
-	movq	%rcx, 112(%rax)
-	movq	%rbx, 120(%rax)
-	movq	128(%rdx), %rcx
-	movq	136(%rdx), %rbx
-	movq	%rcx, 128(%rax)
-	movq	%rbx, 136(%rax)
-	movq	144(%rdx), %rcx
-	movq	152(%rdx), %rbx
-	movq	%rcx, 144(%rax)
-	movq	%rbx, 152(%rax)
-	movq	160(%rdx), %rcx
-	movq	168(%rdx), %rbx
-	movq	%rcx, 160(%rax)
-	movq	%rbx, 168(%rax)
-	movq	176(%rdx), %rcx
-	movq	184(%rdx), %rbx
-	movq	%rcx, 176(%rax)
-	movq	%rbx, 184(%rax)
-	movq	192(%rdx), %rcx
-	movq	200(%rdx), %rbx
-	movq	%rcx, 192(%rax)
-	movq	%rbx, 200(%rax)
-	movq	208(%rdx), %rcx
-	movq	216(%rdx), %rbx
-	movq	%rcx, 208(%rax)
-	movq	%rbx, 216(%rax)
-	movq	224(%rdx), %rcx
-	movq	232(%rdx), %rbx
-	movq	%rcx, 224(%rax)
-	movq	%rbx, 232(%rax)
-	movq	248(%rdx), %rcx
-	movq	240(%rdx), %rdx
-	movq	%rdx, 240(%rax)
-	movq	%rcx, 248(%rax)
-	movq	160(%rbp), %rax
-	addq	$264, %rsp
 	popq	%rbx
 	popq	%rbp
 	ret
@@ -799,16 +663,16 @@ _ZStlsIcSt11char_traitsIcELm32EERSt13basic_ostreamIT_T0_ES6_RKSt6bitsetIXT1_EE:
 	movq	%rax, %rcx
 	call	_ZNSsD1Ev
 	movq	%rbx, %rax
-	jmp	.L48
-.L46:
+	jmp	.L47
+.L45:
 	movq	%rax, %rbx
 	leaq	-80(%rbp), %rax
 	movq	%rax, %rcx
 	call	_ZNSt6localeD1Ev
-	jmp	.L45
-.L47:
+	jmp	.L44
+.L46:
 	movq	%rax, %rbx
-.L45:
+.L44:
 	leaq	-88(%rbp), %rax
 	movq	%rax, %rcx
 	call	_ZNSsD1Ev
@@ -817,7 +681,7 @@ _ZStlsIcSt11char_traitsIcELm32EERSt13basic_ostreamIT_T0_ES6_RKSt6bitsetIXT1_EE:
 .LEHB3:
 	call	_Unwind_Resume
 .LEHE3:
-.L48:
+.L47:
 	addq	$72, %rsp
 	popq	%rbx
 	popq	%rbp
@@ -837,11 +701,11 @@ _ZStlsIcSt11char_traitsIcELm32EERSt13basic_ostreamIT_T0_ES6_RKSt6bitsetIXT1_EE:
 	.uleb128 0
 	.uleb128 .LEHB1-.LFB2525
 	.uleb128 .LEHE1-.LEHB1
-	.uleb128 .L46-.LFB2525
+	.uleb128 .L45-.LFB2525
 	.uleb128 0
 	.uleb128 .LEHB2-.LFB2525
 	.uleb128 .LEHE2-.LEHB2
-	.uleb128 .L47-.LFB2525
+	.uleb128 .L46-.LFB2525
 	.uleb128 0
 	.uleb128 .LEHB3-.LFB2525
 	.uleb128 .LEHE3-.LEHB3
@@ -898,16 +762,16 @@ _ZNKSt6bitsetILm32EE17_M_copy_to_stringIcSt11char_traitsIcESaIcEEEvRSbIT_T0_T1_E
 	movq	%rax, %rcx
 	call	_ZNSs6assignEmc
 	movq	$32, -8(%rbp)
-.L54:
+.L53:
 	cmpq	$0, -8(%rbp)
-	je	.L55
+	je	.L54
 	movq	-8(%rbp), %rax
 	subq	$1, %rax
 	movq	%rax, %rdx
 	movq	16(%rbp), %rcx
 	call	_ZNKSt6bitsetILm32EE15_Unchecked_testEm
 	testb	%al, %al
-	je	.L53
+	je	.L52
 	movl	$32, %eax
 	subq	-8(%rbp), %rax
 	movq	%rax, %rdx
@@ -918,10 +782,10 @@ _ZNKSt6bitsetILm32EE17_M_copy_to_stringIcSt11char_traitsIcESaIcEEEvRSbIT_T0_T1_E
 	leaq	40(%rbp), %rax
 	movq	%rax, %rdx
 	call	_ZNSt11char_traitsIcE6assignERcRKc
-.L53:
+.L52:
 	subq	$1, -8(%rbp)
-	jmp	.L54
-.L55:
+	jmp	.L53
+.L54:
 	nop
 	addq	$48, %rsp
 	popq	%rbp
@@ -977,16 +841,16 @@ _Z41__static_initialization_and_destruction_0ii:
 	movl	%ecx, 16(%rbp)
 	movl	%edx, 24(%rbp)
 	cmpl	$1, 16(%rbp)
-	jne	.L60
+	jne	.L59
 	cmpl	$65535, 24(%rbp)
-	jne	.L60
+	jne	.L59
 	leaq	_ZStL8__ioinit(%rip), %rcx
 	call	_ZNSt8ios_base4InitC1Ev
 	movq	.refptr.__dso_handle(%rip), %r8
 	leaq	_ZStL8__ioinit(%rip), %rdx
 	movq	.refptr._ZNSt8ios_base4InitD1Ev(%rip), %rcx
 	call	__cxa_atexit
-.L60:
+.L59:
 	nop
 	addq	$32, %rsp
 	popq	%rbp

@@ -6,25 +6,27 @@
 #include <utility>
 using namespace std;
 
-struct T { unsigned char data[256]; };
-struct U { unsigned char data[256]; };
+const size_t large_object_size = 1024;
+
+struct T { unsigned char data[large_object_size]; };
+struct U { unsigned char data[large_object_size]; };
 T large_object;
 
-void do_fastest_byte_cast()
+void do_fastest_bit_cast()
 {
 	asm("# BEGIN FASTEST BYTE CAST");
 	swoope::bit_cast<uintptr_t>(&cin);
 	asm("# END FASTEST BYTE CAST");
 }
 
-void do_fast_byte_cast()
+void do_fast_bit_cast()
 {
 	asm("# BEGIN FAST BYTE CAST");
 	swoope::bit_cast<uint32_t>(0.156225f);
 	asm("# END FAST BYTE CAST");
 }
 
-void do_byte_cast()
+void do_bit_cast()
 {
 	asm("# BEGIN BYTE CAST");
 	swoope::bit_cast<U>(large_object);
@@ -33,9 +35,9 @@ void do_byte_cast()
 
 int main()
 {
-	do_fastest_byte_cast();
-	do_fast_byte_cast();
-	do_byte_cast();
+	do_fastest_bit_cast();
+	do_fast_bit_cast();
+	do_bit_cast();
 
 	cout << 
 	swoope::bit_cast<uintptr_t>(nullptr) << endl <<
