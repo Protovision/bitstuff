@@ -10,16 +10,51 @@
  *
  *	template <std::size_t N>
  *	constexpr void* constexpr_memcpy(void* dst, const void* src);
+ *	template <std::size_t N>
+ *	constexpr void* constexpr_strict_alias_memcpy(void* dst, const void* src);
  *
  * TODO:
- *	- Support different alignments
- *	- Create macro for falling back to simple byte-by-byte copy
+ *	- Determine real alignment of an address at runtime
+ *	- Support different alignments for constexpr_memcpy
+ *	- Fall back to constexpr_strict_alias_memcpy if alignments don't match
+ *		(until constexpr_memcpy supports different alignments)
+ *	- Create macro to always use constexpr_strict_alias_memcpy
+ *	
  */
 
 #include <cstddef>
 #include <climits>
 
 namespace swoope {
+
+	template <std::size_t N>
+	[[gnu::always_inline]] inline
+	constexpr typename std::enable_if<N == 0>::type*
+	constexpr_strict_alias_memcpy(void* dst, const void* src) noexcept
+	{
+		return dst;
+	}
+
+	template <std::size_t N>
+	[[gnu::always_inline]] inline
+	constexpr typename std::enable_if<N == sizeof(unsigned char)>::type*
+	constexpr_strict_alias_memcpy(void* dst, const void* src) noexcept
+	{
+		*reinterpret_cast<unsigned char*>(dst) =
+			*reinterpret_cast<const unsigned char*>(src);
+		return dst;
+	}
+
+	template <std::size_t N>
+	constexpr typename std::enable_if<(N > sizeof(unsigned char))>::type*
+	constexpr_strict_alias_memcpy(void* dst, const void* src) noexcept
+	{
+		std::size_t n = N;
+		unsigned char* d = reinterpret_cast<unsigned char*>(dst);
+		const unsigned char* s = reinterpret_cast<const unsigned char*>(src);
+		while (n > 0) { *d++ = *s++; --n; }
+		return dst;
+	}
 
 	template <std::size_t N>
 	[[gnu::always_inline]] inline

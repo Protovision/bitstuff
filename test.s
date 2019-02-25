@@ -9,7 +9,7 @@ _ZStL19piecewise_construct:
 	.def	_ZNSt11char_traitsIcE6assignERcRKc;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNSt11char_traitsIcE6assignERcRKc
 _ZNSt11char_traitsIcE6assignERcRKc:
-.LFB417:
+.LFB420:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -31,7 +31,7 @@ _ZNSt11char_traitsIcE6assignERcRKc:
 	.def	_ZStanSt13_Ios_FmtflagsS_;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZStanSt13_Ios_FmtflagsS_
 _ZStanSt13_Ios_FmtflagsS_:
-.LFB1115:
+.LFB1118:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -50,7 +50,7 @@ _ZStanSt13_Ios_FmtflagsS_:
 	.def	_ZStorSt13_Ios_FmtflagsS_;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZStorSt13_Ios_FmtflagsS_
 _ZStorSt13_Ios_FmtflagsS_:
-.LFB1116:
+.LFB1119:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -69,7 +69,7 @@ _ZStorSt13_Ios_FmtflagsS_:
 	.def	_ZStcoSt13_Ios_Fmtflags;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZStcoSt13_Ios_Fmtflags
 _ZStcoSt13_Ios_Fmtflags:
-.LFB1118:
+.LFB1121:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -87,7 +87,7 @@ _ZStcoSt13_Ios_Fmtflags:
 	.def	_ZStoRRSt13_Ios_FmtflagsS_;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZStoRRSt13_Ios_FmtflagsS_
 _ZStoRRSt13_Ios_FmtflagsS_:
-.LFB1119:
+.LFB1122:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -116,7 +116,7 @@ _ZStoRRSt13_Ios_FmtflagsS_:
 	.def	_ZStaNRSt13_Ios_FmtflagsS_;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZStaNRSt13_Ios_FmtflagsS_
 _ZStaNRSt13_Ios_FmtflagsS_:
-.LFB1120:
+.LFB1123:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -146,7 +146,7 @@ _ZStaNRSt13_Ios_FmtflagsS_:
 	.def	_ZNSt8ios_base4setfESt13_Ios_FmtflagsS0_;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNSt8ios_base4setfESt13_Ios_FmtflagsS0_
 _ZNSt8ios_base4setfESt13_Ios_FmtflagsS0_:
-.LFB1149:
+.LFB1152:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -189,7 +189,7 @@ _ZNSt8ios_base4setfESt13_Ios_FmtflagsS0_:
 	.def	_ZNKSt8ios_base6getlocEv;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNKSt8ios_base6getlocEv
 _ZNKSt8ios_base6getlocEv:
-.LFB1155:
+.LFB1158:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -215,7 +215,7 @@ _ZNKSt8ios_base6getlocEv:
 	.def	_ZSt3hexRSt8ios_base;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZSt3hexRSt8ios_base
 _ZSt3hexRSt8ios_base:
-.LFB1177:
+.LFB1180:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -240,7 +240,7 @@ _ZSt3hexRSt8ios_base:
 	.def	_ZNKSt5ctypeIcE5widenEc;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNKSt5ctypeIcE5widenEc
 _ZNKSt5ctypeIcE5widenEc:
-.LFB1273:
+.LFB1276:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -284,7 +284,7 @@ _ZNKSt5ctypeIcE5widenEc:
 	.def	_ZNSt12_Base_bitsetILm1EEC2Ey;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNSt12_Base_bitsetILm1EEC2Ey
 _ZNSt12_Base_bitsetILm1EEC2Ey:
-.LFB1552:
+.LFB1555:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -305,7 +305,7 @@ _ZNSt12_Base_bitsetILm1EEC2Ey:
 	.def	_ZNSt12_Base_bitsetILm1EE11_S_whichbitEm;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNSt12_Base_bitsetILm1EE11_S_whichbitEm
 _ZNSt12_Base_bitsetILm1EE11_S_whichbitEm:
-.LFB1556:
+.LFB1559:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -323,7 +323,7 @@ _ZNSt12_Base_bitsetILm1EE11_S_whichbitEm:
 	.def	_ZNSt12_Base_bitsetILm1EE10_S_maskbitEm;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNSt12_Base_bitsetILm1EE10_S_maskbitEm
 _ZNSt12_Base_bitsetILm1EE10_S_maskbitEm:
-.LFB1557:
+.LFB1560:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -349,7 +349,7 @@ _ZNSt12_Base_bitsetILm1EE10_S_maskbitEm:
 	.def	_ZNKSt12_Base_bitsetILm1EE10_M_getwordEm;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNKSt12_Base_bitsetILm1EE10_M_getwordEm
 _ZNKSt12_Base_bitsetILm1EE10_M_getwordEm:
-.LFB1559:
+.LFB1562:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -367,9 +367,6 @@ _ZStL13allocator_arg:
 	.space 1
 _ZStL6ignore:
 	.space 1
-	.align 8
-_ZL17large_object_size:
-	.quad	1024
 	.globl	large_object
 	.bss
 	.align 32
@@ -380,7 +377,7 @@ large_object:
 	.def	_Z19do_fastest_bit_castv;	.scl	2;	.type	32;	.endef
 	.seh_proc	_Z19do_fastest_bit_castv
 _Z19do_fastest_bit_castv:
-.LFB2259:
+.LFB2262:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -389,15 +386,15 @@ _Z19do_fastest_bit_castv:
 	.seh_stackalloc	16
 	.seh_endprologue
 /APP
- # 17 "test.cpp" 1
-	# BEGIN FASTEST BYTE CAST
+ # 16 "test.cpp" 1
+	# BEGIN FASTEST BIT CAST
  # 0 "" 2
 /NO_APP
 	movq	.refptr._ZSt3cin(%rip), %rax
 	movq	%rax, -8(%rbp)
 /APP
- # 19 "test.cpp" 1
-	# END FASTEST BYTE CAST
+ # 18 "test.cpp" 1
+	# END FASTEST BIT CAST
  # 0 "" 2
 /NO_APP
 	nop
@@ -409,7 +406,7 @@ _Z19do_fastest_bit_castv:
 	.def	_Z16do_fast_bit_castv;	.scl	2;	.type	32;	.endef
 	.seh_proc	_Z16do_fast_bit_castv
 _Z16do_fast_bit_castv:
-.LFB2260:
+.LFB2263:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -418,8 +415,8 @@ _Z16do_fast_bit_castv:
 	.seh_stackalloc	32
 	.seh_endprologue
 /APP
- # 24 "test.cpp" 1
-	# BEGIN FAST BYTE CAST
+ # 23 "test.cpp" 1
+	# BEGIN FAST BIT CAST
  # 0 "" 2
 /NO_APP
 	movss	.LC0(%rip), %xmm0
@@ -434,8 +431,8 @@ _Z16do_fast_bit_castv:
 	movq	-8(%rbp), %rax
 	movl	%edx, (%rax)
 /APP
- # 26 "test.cpp" 1
-	# END FAST BYTE CAST
+ # 25 "test.cpp" 1
+	# END FAST BIT CAST
  # 0 "" 2
 /NO_APP
 	nop
@@ -447,7 +444,7 @@ _Z16do_fast_bit_castv:
 	.def	_Z11do_bit_castv;	.scl	2;	.type	32;	.endef
 	.seh_proc	_Z11do_bit_castv
 _Z11do_bit_castv:
-.LFB2261:
+.LFB2264:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	pushq	%rdi
@@ -460,8 +457,8 @@ _Z11do_bit_castv:
 	.seh_setframe	%rbp, 128
 	.seh_endprologue
 /APP
- # 31 "test.cpp" 1
-	# BEGIN BYTE CAST
+ # 30 "test.cpp" 1
+	# BEGIN BIT CAST
  # 0 "" 2
 /NO_APP
 	leaq	-96(%rbp), %rdx
@@ -482,8 +479,8 @@ _Z11do_bit_castv:
 	movq	%rdx, %rcx
 	rep movsq
 /APP
- # 33 "test.cpp" 1
-	# END BYTE CAST
+ # 32 "test.cpp" 1
+	# END BIT CAST
  # 0 "" 2
 /NO_APP
 	nop
@@ -498,7 +495,7 @@ _Z11do_bit_castv:
 	.def	main;	.scl	2;	.type	32;	.endef
 	.seh_proc	main
 main:
-.LFB2262:
+.LFB2265:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	pushq	%rbx
@@ -599,7 +596,7 @@ main:
 	.def	_ZNSt6bitsetILm32EEC1Ey;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNSt6bitsetILm32EEC1Ey
 _ZNSt6bitsetILm32EEC1Ey:
-.LFB2531:
+.LFB2534:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	pushq	%rbx
@@ -630,7 +627,7 @@ _ZNSt6bitsetILm32EEC1Ey:
 	.def	_ZStlsIcSt11char_traitsIcELm32EERSt13basic_ostreamIT_T0_ES6_RKSt6bitsetIXT1_EE;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZStlsIcSt11char_traitsIcELm32EERSt13basic_ostreamIT_T0_ES6_RKSt6bitsetIXT1_EE
 _ZStlsIcSt11char_traitsIcELm32EERSt13basic_ostreamIT_T0_ES6_RKSt6bitsetIXT1_EE:
-.LFB2532:
+.LFB2535:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	pushq	%rbx
@@ -719,29 +716,29 @@ _ZStlsIcSt11char_traitsIcELm32EERSt13basic_ostreamIT_T0_ES6_RKSt6bitsetIXT1_EE:
 	.def	__gxx_personality_seh0;	.scl	2;	.type	32;	.endef
 	.seh_handler	__gxx_personality_seh0, @unwind, @except
 	.seh_handlerdata
-.LLSDA2532:
+.LLSDA2535:
 	.byte	0xff
 	.byte	0xff
 	.byte	0x1
-	.uleb128 .LLSDACSE2532-.LLSDACSB2532
-.LLSDACSB2532:
-	.uleb128 .LEHB0-.LFB2532
+	.uleb128 .LLSDACSE2535-.LLSDACSB2535
+.LLSDACSB2535:
+	.uleb128 .LEHB0-.LFB2535
 	.uleb128 .LEHE0-.LEHB0
 	.uleb128 0
 	.uleb128 0
-	.uleb128 .LEHB1-.LFB2532
+	.uleb128 .LEHB1-.LFB2535
 	.uleb128 .LEHE1-.LEHB1
-	.uleb128 .L49-.LFB2532
+	.uleb128 .L49-.LFB2535
 	.uleb128 0
-	.uleb128 .LEHB2-.LFB2532
+	.uleb128 .LEHB2-.LFB2535
 	.uleb128 .LEHE2-.LEHB2
-	.uleb128 .L50-.LFB2532
+	.uleb128 .L50-.LFB2535
 	.uleb128 0
-	.uleb128 .LEHB3-.LFB2532
+	.uleb128 .LEHB3-.LFB2535
 	.uleb128 .LEHE3-.LEHB3
 	.uleb128 0
 	.uleb128 0
-.LLSDACSE2532:
+.LLSDACSE2535:
 	.section	.text$_ZStlsIcSt11char_traitsIcELm32EERSt13basic_ostreamIT_T0_ES6_RKSt6bitsetIXT1_EE,"x"
 	.linkonce discard
 	.seh_endproc
@@ -751,7 +748,7 @@ _ZStlsIcSt11char_traitsIcELm32EERSt13basic_ostreamIT_T0_ES6_RKSt6bitsetIXT1_EE:
 	.def	_ZN6swoope16constexpr_memcpyILm1024EEEPNSt9enable_ifIXaaaaaaaaneT_styneT_stjneT_sttneT_sthneT_Li0EEvE4typeEPvPKv;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZN6swoope16constexpr_memcpyILm1024EEEPNSt9enable_ifIXaaaaaaaaneT_styneT_stjneT_sttneT_sthneT_Li0EEvE4typeEPvPKv
 _ZN6swoope16constexpr_memcpyILm1024EEEPNSt9enable_ifIXaaaaaaaaneT_styneT_stjneT_sttneT_sthneT_Li0EEvE4typeEPvPKv:
-.LFB2619:
+.LFB2622:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -802,7 +799,7 @@ _ZN6swoope16constexpr_memcpyILm1024EEEPNSt9enable_ifIXaaaaaaaaneT_styneT_stjneT_
 	.def	_ZNSt13_Sanitize_valILm32ELb1EE18_S_do_sanitize_valEy;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNSt13_Sanitize_valILm32ELb1EE18_S_do_sanitize_valEy
 _ZNSt13_Sanitize_valILm32ELb1EE18_S_do_sanitize_valEy:
-.LFB2622:
+.LFB2625:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -821,7 +818,7 @@ _ZNSt13_Sanitize_valILm32ELb1EE18_S_do_sanitize_valEy:
 	.def	_ZNKSt6bitsetILm32EE17_M_copy_to_stringIcSt11char_traitsIcESaIcEEEvRSbIT_T0_T1_ES5_S5_;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNKSt6bitsetILm32EE17_M_copy_to_stringIcSt11char_traitsIcESaIcEEEvRSbIT_T0_T1_ES5_S5_
 _ZNKSt6bitsetILm32EE17_M_copy_to_stringIcSt11char_traitsIcESaIcEEEvRSbIT_T0_T1_ES5_S5_:
-.LFB2626:
+.LFB2629:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -879,7 +876,7 @@ _ZNKSt6bitsetILm32EE17_M_copy_to_stringIcSt11char_traitsIcESaIcEEEvRSbIT_T0_T1_E
 	.def	_ZNKSt6bitsetILm32EE15_Unchecked_testEm;	.scl	2;	.type	32;	.endef
 	.seh_proc	_ZNKSt6bitsetILm32EE15_Unchecked_testEm
 _ZNKSt6bitsetILm32EE15_Unchecked_testEm:
-.LFB2660:
+.LFB2663:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	pushq	%rbx
@@ -911,7 +908,7 @@ _ZNKSt6bitsetILm32EE15_Unchecked_testEm:
 	.def	_Z41__static_initialization_and_destruction_0ii;	.scl	3;	.type	32;	.endef
 	.seh_proc	_Z41__static_initialization_and_destruction_0ii
 _Z41__static_initialization_and_destruction_0ii:
-.LFB2719:
+.LFB2722:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
@@ -940,7 +937,7 @@ _Z41__static_initialization_and_destruction_0ii:
 	.def	_GLOBAL__sub_I_large_object;	.scl	3;	.type	32;	.endef
 	.seh_proc	_GLOBAL__sub_I_large_object
 _GLOBAL__sub_I_large_object:
-.LFB2720:
+.LFB2723:
 	pushq	%rbp
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
