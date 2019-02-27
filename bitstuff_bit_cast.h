@@ -109,7 +109,6 @@ namespace swoope {
 	PARAMETER_TYPE, \
 	RESULT_INITIALIZER) \
 	template <class To, class From> \
-	[[gnu::always_inline]] inline \
 	constexpr typename std::enable_if< \
 		_BITSTUFF_MEMCPY_ENABLE_IF_CONDITION_1() && \
 		ENABLE_IF_CONDITION, To \
@@ -119,13 +118,18 @@ namespace swoope {
 		constexpr typename \
 			std::aligned_storage<sizeof(To), alignof(To)>::type \
 			result RESULT_INITIALIZER; \
-		constexpr_memcpy< \
-			sizeof(typename std::conditional< \
-				is_sizeof_less_equal<From, To>::value, From, To \
-			>::type) \
-		>(const_cast< \
+		constexpr_memcpy( \
+			const_cast< \
 				typename std::remove_const<decltype(result)>::type* \
-			>(&result), &from); \
+			>(&result), \
+			&from, \
+			sizeof( \
+				typename std::conditional< \
+					is_sizeof_less_equal<From, To>::value, \
+					From, To \
+				>::type \
+			) \
+		); \
 		return *reinterpret_cast<const To*>(&result); \
 	}
 

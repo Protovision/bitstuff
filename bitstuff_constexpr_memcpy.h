@@ -1,130 +1,41 @@
-#ifndef BITSTUFF_MEMCPY_H
-#define BITSTUFF_MEMCPY_H
-
-/*
- * File: bitstuff_constexpr_memcpy.h
- * Author: Mark Swoope
- * Date: Februrary 24, 2019
- *
- * A portable constexpr memcpy for C++ (-fno-strict-aliasing):
- *
- *	template <std::size_t N>
- *	constexpr void* constexpr_memcpy(void* dst, const void* src);
- *	template <std::size_t N>
- *	constexpr void* constexpr_strict_alias_memcpy(void* dst, const void* src);
- *
- * TODO:
- *	- Determine real alignment of an address at runtime
- *	- Support different alignments for constexpr_memcpy
- *	- Fall back to constexpr_strict_alias_memcpy if alignments don't match
- *		(until constexpr_memcpy supports different alignments)
- *	- Create macro to always use constexpr_strict_alias_memcpy
- *	
- */
-
-#include <cstddef>
-#include <climits>
+#ifndef BITSTUFF_CONSTEXPR_MEMCPY_H
+#define BITSTUFF_CONSTEXPR_MEMCPY_H
+#include "bitstuff_align.h"
 
 namespace swoope {
 
-	template <std::size_t N>
-	[[gnu::always_inline]] inline
-	constexpr typename std::enable_if<N == 0>::type*
-	constexpr_strict_alias_memcpy(void* dst, const void* src) noexcept
+	/*
+	 * Precondition: 
+	 *	src != nullptr &&
+	 *	dst != nullptr &&
+	 *	is_aligned_as(dst, alignof(std::uintptr_t)) &&
+	 *	is_aligned_as(src, alignof(std::uintptr_t))
+	 *
+	 * TODO: Support copying between address not aligned to uintptr_t
+	 */
+	constexpr
+	void* constexpr_memcpy(
+		void* dst,
+		const void* src,
+		std::size_t n)
+	noexcept
 	{
-		return dst;
-	}
-
-	template <std::size_t N>
-	[[gnu::always_inline]] inline
-	constexpr typename std::enable_if<N == sizeof(unsigned char)>::type*
-	constexpr_strict_alias_memcpy(void* dst, const void* src) noexcept
-	{
-		*reinterpret_cast<unsigned char*>(dst) =
-			*reinterpret_cast<const unsigned char*>(src);
-		return dst;
-	}
-
-	template <std::size_t N>
-	constexpr typename std::enable_if<(N > sizeof(unsigned char))>::type*
-	constexpr_strict_alias_memcpy(void* dst, const void* src) noexcept
-	{
-		std::size_t n = N;
-		unsigned char* d = reinterpret_cast<unsigned char*>(dst);
-		const unsigned char* s = reinterpret_cast<const unsigned char*>(src);
-		while (n > 0) { *d++ = *s++; --n; }
-		return dst;
-	}
-
-	template <std::size_t N>
-	[[gnu::always_inline]] inline
-	constexpr typename std::enable_if<N == 0>::type*
-	constexpr_memcpy(void* dst, const void* src) noexcept
-	{
-		return dst;
-	}
-
-#define _BITSTUFF_CONSTEXPR_MEMCPY_SIZEOF(TYPE) \
-	template <std::size_t N> \
-	[[gnu::always_inline]] inline \
-	constexpr \
-	typename std::enable_if<N == sizeof(TYPE)>::type* \
-	constexpr_memcpy(void* dst, const void* src) noexcept \
-	{ \
-		*reinterpret_cast<TYPE*>(dst) = *reinterpret_cast<const TYPE*>(src); \
-		return dst; \
-	}
-
-	_BITSTUFF_CONSTEXPR_MEMCPY_SIZEOF(unsigned long long int)
-#if ULONG_MAX < ULLONG_MAX
-	_BITSTUFF_CONSTEXPR_MEMCPY_SIZEOF(unsigned long int)
-#endif
-#if UINT_MAX < ULONG_MAX && UINT_MAX < ULLONG_MAX
-	_BITSTUFF_CONSTEXPR_MEMCPY_SIZEOF(unsigned int)
-#endif
-#if USHRT_MAX < UINT_MAX && USHRT_MAX < ULONG_MAX && USHRT_MAX < ULLONG_MAX
-	_BITSTUFF_CONSTEXPR_MEMCPY_SIZEOF(unsigned short int)
-#endif
-#if UCHAR_MAX < USHRT_MAX && UCHAR_MAX < UINT_MAX && UCHAR_MAX < ULONG_MAX && \
-	UCHAR_MAX < ULLONG_MAX
-	_BITSTUFF_CONSTEXPR_MEMCPY_SIZEOF(unsigned char)
-#endif
-
-	template <std::size_t N>
-	constexpr typename std::enable_if<
-		N != sizeof(unsigned long long int) 
-#if ULONG_MAX < ULLONG_MAX
-		&& N != sizeof(unsigned long int)
-#endif
-#if UINT_MAX < ULONG_MAX && UINT_MAX < ULLONG_MAX
-		&& N != sizeof(unsigned int)
-#endif
-#if USHRT_MAX < UINT_MAX && USHRT_MAX < ULONG_MAX && USHRT_MAX < ULLONG_MAX
-		&& N != sizeof(unsigned short int)
-#endif
-#if UCHAR_MAX < USHRT_MAX && UCHAR_MAX < UINT_MAX && UCHAR_MAX < ULONG_MAX && \
-	UCHAR_MAX < ULLONG_MAX
-		&& N != sizeof(unsigned char)
-#endif
-		&& N != 0
-	>::type*
-	constexpr_memcpy(void* dst, const void* src) noexcept
-	{
-		std::size_t n = N;
-		unsigned char* d = reinterpret_cast<unsigned char*>(dst);
-		const unsigned char* s = reinterpret_cast<const unsigned char*>(src);
-		while (n > sizeof(unsigned long int)) {
-			*reinterpret_cast<unsigned long int*>(d) = 
-				*reinterpret_cast<const unsigned long int*>(s);
-			d += sizeof(unsigned long int);
-			s += sizeof(unsigned long int);
-			n -= sizeof(unsigned long int);
+		unsigned char* d = reinterpret_cast<decltype(d)>(dst);
+		unsigned char* ad = align_right(d, alignof(std::uintptr_t));
+		const unsigned char* s = reinterpret_cast<decltype(s)>(src);
+		if (ad - d > n) {
+			while (d != ad) { *d++ = *s++; --n; }
+			while (n > sizeof(std::uintptr_t)) {
+				*reinterpret_cast<std::uintptr_t*>(d) = 
+					*reinterpret_cast<const std::uintptr_t*>(s);
+				d += sizeof(std::uintptr_t);
+				s += sizeof(std::uintptr_t);
+				n -= sizeof(std::uintptr_t);
+			}
 		}
 		while (n > 0) { *d++ = *s++; --n; }
 		return dst;
 	}
-
-#undef _BITSTUFF_CONSTEXPR_MEMCPY_SIZEOF
 
 }
 
